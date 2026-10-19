@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="RabbitMQ.Client" Version="7.*" />
+    <ProjectReference Include="..\Genkan.Notification.Business\Genkan.Notification.Business.csproj" />
+    <ProjectReference Include="..\..\Genkan.Shared\Genkan.Shared.csproj" />
+  </ItemGroup>
+</Project>

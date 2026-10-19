@@ -1,6 +1,5 @@
 using System.Text.Json;
 using Genkan.Notification.Entities;
-using Genkan.Notification.Messaging;
 using Genkan.Notification.Repository;
 using Genkan.Shared;
 

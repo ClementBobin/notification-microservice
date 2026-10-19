@@ -12,6 +12,30 @@ One PostgreSQL database (`genkan`), one schema per service, tables created at st
 Only the gateway is published on the host. Services trust the `X-User-*` headers set by the gateway
 (it strips client-supplied ones), so never expose `auth` / `notification` directly.
 
+## Project layout
+
+Each service is its own solution made of layered projects; the root `Genkan.slnx` contains everything.
+
+```
+src/
+  Genkan.Shared/                      contracts, gateway header auth, DB bootstrap
+  Genkan.Gateway/                     YARP reverse proxy (single project)
+  Genkan.Auth/            Genkan.Auth.slnx
+    Genkan.Auth.Domain/               entities
+    Genkan.Auth.Data/                 DbContext + repositories
+    Genkan.Auth.Business/             AuthService, TOTP/password crypto, Redis session store
+    Genkan.Auth.Api/                  Program.cs + endpoints (the only runnable project)
+  Genkan.Notification/    Genkan.Notification.slnx
+    Genkan.Notification.Domain/
+    Genkan.Notification.Data/
+    Genkan.Notification.Business/     services, templates, IPushSender, IEventPublisher (port)
+    Genkan.Notification.Messaging/    RabbitMQ consumer + publisher (implements IEventPublisher)
+    Genkan.Notification.Api/
+```
+
+References point one way: `Api → Business → Data → Domain` (Messaging → Business, everything may use Shared).
+Build one service on its own: `dotnet build src/Genkan.Auth/Genkan.Auth.slnx`.
+
 ## Run
 
 ```bash

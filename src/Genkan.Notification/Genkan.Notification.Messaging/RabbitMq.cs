@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Genkan.Notification.Business;
 using Genkan.Shared;
 using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
@@ -60,11 +61,6 @@ public sealed class RabbitMqConnection(IOptions<RabbitOptions> options) : IAsync
         foreach (var key in Topology.NotificationBindings)
             await ch.QueueBindAsync(Topology.NotificationQueue, Topology.Exchange, key, cancellationToken: ct);
     }
-}
-
-public interface IEventPublisher
-{
-    Task PublishAsync(EventEnvelope envelope, CancellationToken ct);
 }
 
 public sealed class RabbitMqEventPublisher(RabbitMqConnection connection) : IEventPublisher

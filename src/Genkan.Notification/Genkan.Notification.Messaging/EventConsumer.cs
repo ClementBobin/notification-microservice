@@ -1,6 +1,9 @@
 using System.Text.Json;
 using Genkan.Notification.Business;
 using Genkan.Shared;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 

@@ -2,6 +2,7 @@ using System.Text.Json;
 using Genkan.Notification.Entities;
 using Genkan.Notification.Repository;
 using Genkan.Shared;
+using Microsoft.Extensions.Logging;
 
 namespace Genkan.Notification.Business;
 

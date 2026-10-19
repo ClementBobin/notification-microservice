@@ -47,7 +47,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        SERVICE_NAME: Genkan.Auth
+        SERVICE_PROJECT: Genkan.Auth/Genkan.Auth.Api/Genkan.Auth.Api.csproj
     environment:
       <<: *service-env
       ConnectionStrings__Postgres: Host=postgres;Database=genkan;Username=genkan;Password=${POSTGRES_PASSWORD}
@@ -69,7 +69,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        SERVICE_NAME: Genkan.Notification
+        SERVICE_PROJECT: Genkan.Notification/Genkan.Notification.Api/Genkan.Notification.Api.csproj
     environment:
       <<: *service-env
       ConnectionStrings__Postgres: Host=postgres;Database=genkan;Username=genkan;Password=${POSTGRES_PASSWORD}
@@ -91,7 +91,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        SERVICE_NAME: Genkan.Gateway
+        SERVICE_PROJECT: Genkan.Gateway/Genkan.Gateway.csproj
     environment:
       <<: *service-env
       Services__AuthUrl: http://auth:8080
