@@ -54,9 +54,6 @@ services:
       ConnectionStrings__Redis: redis:6379,abortConnect=false
       Seed__AdminEmail: ${ADMIN_EMAIL:?copy .env.example to .env}
       Seed__AdminPassword: ${ADMIN_PASSWORD:?copy .env.example to .env}
-    depends_on:
-      postgres: { condition: service_healthy }
-      redis: { condition: service_healthy }
     healthcheck:
       test: ["CMD", "curl", "-fsS", "http://localhost:8080/health"]
       interval: 10s
@@ -76,9 +73,6 @@ services:
       RabbitMq__Host: rabbitmq
       RabbitMq__User: ${RABBITMQ_USER}
       RabbitMq__Password: ${RABBITMQ_PASSWORD}
-    depends_on:
-      postgres: { condition: service_healthy }
-      rabbitmq: { condition: service_healthy }
     healthcheck:
       test: ["CMD", "curl", "-fsS", "http://localhost:8080/health"]
       interval: 10s
@@ -97,9 +91,6 @@ services:
       Services__AuthUrl: http://auth:8080
     ports:
       - "${GATEWAY_PORT:-8080}:8080"   # the only service exposed to clients
-    depends_on:
-      auth: { condition: service_healthy }
-      notification: { condition: service_healthy }
 
 volumes:
   pgdata:
