@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Genkan.Shared/Genkan.Shared.csproj" />
+    <Project Path="src/Genkan.Gateway/Genkan.Gateway.csproj" />
+    <Project Path="src/Genkan.Auth/Genkan.Auth.csproj" />
+    <Project Path="src/Genkan.Notification/Genkan.Notification.csproj" />
+  </Folder>
+</Solution>
