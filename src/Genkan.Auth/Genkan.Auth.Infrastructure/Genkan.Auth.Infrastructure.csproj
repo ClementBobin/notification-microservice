@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.*" />
+    <PackageReference Include="StackExchange.Redis" Version="2.*" />
+    <ProjectReference Include="..\Genkan.Auth.Domain\Genkan.Auth.Domain.csproj" />
+  </ItemGroup>
+</Project>

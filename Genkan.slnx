@@ -2,7 +2,17 @@
   <Folder Name="/src/">
     <Project Path="src/Genkan.Shared/Genkan.Shared.csproj" />
     <Project Path="src/Genkan.Gateway/Genkan.Gateway.csproj" />
-    <Project Path="src/Genkan.Auth/Genkan.Auth.csproj" />
-    <Project Path="src/Genkan.Notification/Genkan.Notification.csproj" />
+  </Folder>
+  <Folder Name="/src/Auth/">
+    <Project Path="src/Genkan.Auth/Genkan.Auth.Domain/Genkan.Auth.Domain.csproj" />
+    <Project Path="src/Genkan.Auth/Genkan.Auth.Infrastructure/Genkan.Auth.Infrastructure.csproj" />
+    <Project Path="src/Genkan.Auth/Genkan.Auth.Application/Genkan.Auth.Application.csproj" />
+    <Project Path="src/Genkan.Auth/Genkan.Auth.Api/Genkan.Auth.Api.csproj" />
+  </Folder>
+  <Folder Name="/src/Notification/">
+    <Project Path="src/Genkan.Notification/Genkan.Notification.Domain/Genkan.Notification.Domain.csproj" />
+    <Project Path="src/Genkan.Notification/Genkan.Notification.Infrastructure/Genkan.Notification.Infrastructure.csproj" />
+    <Project Path="src/Genkan.Notification/Genkan.Notification.Application/Genkan.Notification.Application.csproj" />
+    <Project Path="src/Genkan.Notification/Genkan.Notification.Api/Genkan.Notification.Api.csproj" />
   </Folder>
 </Solution>

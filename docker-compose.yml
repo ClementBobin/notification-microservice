@@ -10,7 +10,7 @@ services:
     environment:
       POSTGRES_DB: genkan
       POSTGRES_USER: genkan
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?copy .env.example to .env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -30,8 +30,8 @@ services:
   rabbitmq:
     image: rabbitmq:4-management
     environment:
-      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:?copy .env.example to .env}
-      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:?copy .env.example to .env}
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
     ports:
       - "127.0.0.1:15672:15672"   # management UI, local only
     volumes:
@@ -47,16 +47,13 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        SERVICE_NAME: Genkan.Auth
+        SERVICE_PROJECT: Genkan.Auth/Genkan.Auth.Api/Genkan.Auth.Api.csproj
     environment:
       <<: *service-env
       ConnectionStrings__Postgres: Host=postgres;Database=genkan;Username=genkan;Password=${POSTGRES_PASSWORD}
       ConnectionStrings__Redis: redis:6379,abortConnect=false
-      Seed__AdminEmail: ${ADMIN_EMAIL:?copy .env.example to .env}
-      Seed__AdminPassword: ${ADMIN_PASSWORD:?copy .env.example to .env}
-    depends_on:
-      postgres: { condition: service_healthy }
-      redis: { condition: service_healthy }
+      Seed__AdminEmail: ${ADMIN_EMAIL}
+      Seed__AdminPassword: ${ADMIN_PASSWORD}
     healthcheck:
       test: ["CMD", "curl", "-fsS", "http://localhost:8080/health"]
       interval: 10s
@@ -69,16 +66,17 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        SERVICE_NAME: Genkan.Notification
+        SERVICE_PROJECT: Genkan.Notification/Genkan.Notification.Api/Genkan.Notification.Api.csproj
     environment:
       <<: *service-env
       ConnectionStrings__Postgres: Host=postgres;Database=genkan;Username=genkan;Password=${POSTGRES_PASSWORD}
       RabbitMq__Host: rabbitmq
       RabbitMq__User: ${RABBITMQ_USER}
       RabbitMq__Password: ${RABBITMQ_PASSWORD}
-    depends_on:
-      postgres: { condition: service_healthy }
-      rabbitmq: { condition: service_healthy }
+      Firebase__Enabled: ${FIREBASE_ENABLED}
+      GOOGLE_APPLICATION_CREDENTIALS: ${GOOGLE_APPLICATION_CREDENTIALS}
+    volumes:
+      - ./secrets/firebase-service-account.json:${GOOGLE_APPLICATION_CREDENTIALS}:ro
     healthcheck:
       test: ["CMD", "curl", "-fsS", "http://localhost:8080/health"]
       interval: 10s
@@ -91,15 +89,12 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        SERVICE_NAME: Genkan.Gateway
+        SERVICE_PROJECT: Genkan.Gateway/Genkan.Gateway.csproj
     environment:
       <<: *service-env
       Services__AuthUrl: http://auth:8080
     ports:
       - "${GATEWAY_PORT:-8080}:8080"   # the only service exposed to clients
-    depends_on:
-      auth: { condition: service_healthy }
-      notification: { condition: service_healthy }
 
 volumes:
   pgdata:
