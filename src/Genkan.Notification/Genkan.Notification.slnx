@@ -1,8 +1,7 @@
 <Solution>
   <Project Path="Genkan.Notification.Domain/Genkan.Notification.Domain.csproj" />
-  <Project Path="Genkan.Notification.Data/Genkan.Notification.Data.csproj" />
-  <Project Path="Genkan.Notification.Business/Genkan.Notification.Business.csproj" />
-  <Project Path="Genkan.Notification.Messaging/Genkan.Notification.Messaging.csproj" />
+  <Project Path="Genkan.Notification.Infrastructure/Genkan.Notification.Infrastructure.csproj" />
+  <Project Path="Genkan.Notification.Application/Genkan.Notification.Application.csproj" />
   <Project Path="Genkan.Notification.Api/Genkan.Notification.Api.csproj" />
   <Project Path="../Genkan.Shared/Genkan.Shared.csproj" />
 </Solution>

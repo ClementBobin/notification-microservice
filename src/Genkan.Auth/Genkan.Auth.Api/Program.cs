@@ -1,10 +1,10 @@
 using System.Threading.RateLimiting;
-using Genkan.Auth.Api;
-using Genkan.Auth.Business;
-using Genkan.Auth.Data;
-using Genkan.Auth.Repository;
+using Genkan.Auth.Application.Interfaces;
+using Genkan.Auth.Application.Services;
+using Genkan.Auth.Infrastructure.Data;
+using Genkan.Auth.Infrastructure.Interfaces;
+using Genkan.Auth.Infrastructure.Repositories;
 using Genkan.Shared;
-using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
 
@@ -16,12 +16,13 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(_ =>
     ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("Redis")!));
 builder.Services.AddSingleton<ISessionStore, RedisSessionStore>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.Configure<AuthOptions>(builder.Configuration.GetSection("Auth"));
 builder.Services.AddGatewayHeaderAuth();
+builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
-// AUTH-08: 10 requests / minute / client IP on login endpoints.
+// 10 requests / minute / client IP on the login endpoint.
 // Behind the gateway the real client is the LAST X-Forwarded-For entry (appended by the gateway).
 builder.Services.AddRateLimiter(o =>
 {
@@ -52,7 +53,7 @@ using (var scope = app.Services.CreateScope())
     var repo = scope.ServiceProvider.GetRequiredService<IUserRepository>();
     if (!string.IsNullOrWhiteSpace(email) && !string.IsNullOrWhiteSpace(password) && !await repo.AnyAsync(default))
     {
-        var (_, error) = await scope.ServiceProvider.GetRequiredService<AuthService>()
+        var (_, error) = await scope.ServiceProvider.GetRequiredService<IAuthService>()
             .CreateUserAsync(email, "Administrator", password, Roles.Admin, default);
         app.Logger.LogInformation("Seeded admin {Email}: {Result}", email, error ?? "ok");
     }
@@ -64,7 +65,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapOpenApi();
-app.MapAuthEndpoints();
+app.MapControllers();
 
 async Task<IResult> Health(AuthDbContext db, IConnectionMultiplexer redis)
 {

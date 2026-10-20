@@ -12,7 +12,7 @@ public sealed class TokenValidationMiddleware(RequestDelegate next, IHttpClientF
 {
     private static readonly HashSet<string> PublicPaths = new(StringComparer.OrdinalIgnoreCase)
     {
-        "/health", "/auth/login", "/auth/2fa/verify", "/auth/health", "/notifications/health",
+        "/health", "/auth/login", "/auth/health", "/notifications/health",
     };
 
     public async Task InvokeAsync(HttpContext ctx)

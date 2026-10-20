@@ -5,15 +5,14 @@
   </Folder>
   <Folder Name="/src/Auth/">
     <Project Path="src/Genkan.Auth/Genkan.Auth.Domain/Genkan.Auth.Domain.csproj" />
-    <Project Path="src/Genkan.Auth/Genkan.Auth.Data/Genkan.Auth.Data.csproj" />
-    <Project Path="src/Genkan.Auth/Genkan.Auth.Business/Genkan.Auth.Business.csproj" />
+    <Project Path="src/Genkan.Auth/Genkan.Auth.Infrastructure/Genkan.Auth.Infrastructure.csproj" />
+    <Project Path="src/Genkan.Auth/Genkan.Auth.Application/Genkan.Auth.Application.csproj" />
     <Project Path="src/Genkan.Auth/Genkan.Auth.Api/Genkan.Auth.Api.csproj" />
   </Folder>
   <Folder Name="/src/Notification/">
     <Project Path="src/Genkan.Notification/Genkan.Notification.Domain/Genkan.Notification.Domain.csproj" />
-    <Project Path="src/Genkan.Notification/Genkan.Notification.Data/Genkan.Notification.Data.csproj" />
-    <Project Path="src/Genkan.Notification/Genkan.Notification.Business/Genkan.Notification.Business.csproj" />
-    <Project Path="src/Genkan.Notification/Genkan.Notification.Messaging/Genkan.Notification.Messaging.csproj" />
+    <Project Path="src/Genkan.Notification/Genkan.Notification.Infrastructure/Genkan.Notification.Infrastructure.csproj" />
+    <Project Path="src/Genkan.Notification/Genkan.Notification.Application/Genkan.Notification.Application.csproj" />
     <Project Path="src/Genkan.Notification/Genkan.Notification.Api/Genkan.Notification.Api.csproj" />
   </Folder>
 </Solution>

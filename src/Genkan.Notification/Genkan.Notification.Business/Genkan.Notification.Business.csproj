@@ -1,8 +1,0 @@
-<Project Sdk="Microsoft.NET.Sdk">
-  <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <ProjectReference Include="..\Genkan.Notification.Domain\Genkan.Notification.Domain.csproj" />
-    <ProjectReference Include="..\Genkan.Notification.Data\Genkan.Notification.Data.csproj" />
-    <ProjectReference Include="..\..\Genkan.Shared\Genkan.Shared.csproj" />
-  </ItemGroup>
-</Project>

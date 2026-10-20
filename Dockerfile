@@ -10,14 +10,13 @@ COPY src/Genkan.Shared/Genkan.Shared.csproj src/Genkan.Shared/
 COPY src/Genkan.Gateway/Genkan.Gateway.csproj src/Genkan.Gateway/
 
 COPY src/Genkan.Auth/Genkan.Auth.Domain/Genkan.Auth.Domain.csproj src/Genkan.Auth/Genkan.Auth.Domain/
-COPY src/Genkan.Auth/Genkan.Auth.Data/Genkan.Auth.Data.csproj src/Genkan.Auth/Genkan.Auth.Data/
-COPY src/Genkan.Auth/Genkan.Auth.Business/Genkan.Auth.Business.csproj src/Genkan.Auth/Genkan.Auth.Business/
+COPY src/Genkan.Auth/Genkan.Auth.Infrastructure/Genkan.Auth.Infrastructure.csproj src/Genkan.Auth/Genkan.Auth.Infrastructure/
+COPY src/Genkan.Auth/Genkan.Auth.Application/Genkan.Auth.Application.csproj src/Genkan.Auth/Genkan.Auth.Application/
 COPY src/Genkan.Auth/Genkan.Auth.Api/Genkan.Auth.Api.csproj src/Genkan.Auth/Genkan.Auth.Api/
 
 COPY src/Genkan.Notification/Genkan.Notification.Domain/Genkan.Notification.Domain.csproj src/Genkan.Notification/Genkan.Notification.Domain/
-COPY src/Genkan.Notification/Genkan.Notification.Data/Genkan.Notification.Data.csproj src/Genkan.Notification/Genkan.Notification.Data/
-COPY src/Genkan.Notification/Genkan.Notification.Business/Genkan.Notification.Business.csproj src/Genkan.Notification/Genkan.Notification.Business/
-COPY src/Genkan.Notification/Genkan.Notification.Messaging/Genkan.Notification.Messaging.csproj src/Genkan.Notification/Genkan.Notification.Messaging/
+COPY src/Genkan.Notification/Genkan.Notification.Infrastructure/Genkan.Notification.Infrastructure.csproj src/Genkan.Notification/Genkan.Notification.Infrastructure/
+COPY src/Genkan.Notification/Genkan.Notification.Application/Genkan.Notification.Application.csproj src/Genkan.Notification/Genkan.Notification.Application/
 COPY src/Genkan.Notification/Genkan.Notification.Api/Genkan.Notification.Api.csproj src/Genkan.Notification/Genkan.Notification.Api/
 
 # 3. Restore the entire solution

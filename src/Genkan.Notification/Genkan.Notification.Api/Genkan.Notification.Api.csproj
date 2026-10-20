@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.*" />
-    <ProjectReference Include="..\Genkan.Notification.Business\Genkan.Notification.Business.csproj" />
-    <ProjectReference Include="..\Genkan.Notification.Data\Genkan.Notification.Data.csproj" />
-    <ProjectReference Include="..\Genkan.Notification.Messaging\Genkan.Notification.Messaging.csproj" />
+    <ProjectReference Include="..\Genkan.Notification.Application\Genkan.Notification.Application.csproj" />
+    <ProjectReference Include="..\Genkan.Notification.Domain\Genkan.Notification.Domain.csproj" />
+    <ProjectReference Include="..\Genkan.Notification.Infrastructure\Genkan.Notification.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Genkan.Shared\Genkan.Shared.csproj" />
   </ItemGroup>
 </Project>

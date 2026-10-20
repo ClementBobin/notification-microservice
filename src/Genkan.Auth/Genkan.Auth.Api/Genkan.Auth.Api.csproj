@@ -1,8 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.*" />
-    <ProjectReference Include="..\Genkan.Auth.Business\Genkan.Auth.Business.csproj" />
-    <ProjectReference Include="..\Genkan.Auth.Data\Genkan.Auth.Data.csproj" />
+    <ProjectReference Include="..\Genkan.Auth.Application\Genkan.Auth.Application.csproj" />
+    <ProjectReference Include="..\Genkan.Auth.Domain\Genkan.Auth.Domain.csproj" />
+    <ProjectReference Include="..\Genkan.Auth.Infrastructure\Genkan.Auth.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Genkan.Shared\Genkan.Shared.csproj" />
   </ItemGroup>
 </Project>
