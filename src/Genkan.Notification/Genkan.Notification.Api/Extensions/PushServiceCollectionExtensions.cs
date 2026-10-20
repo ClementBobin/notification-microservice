@@ -8,9 +8,9 @@ namespace Genkan.Notification.Api.Extensions;
 public static class PushServiceCollectionExtensions
 {
     /// <summary>
-    /// Firebase:Enabled=true  -> push through FCM. Credentials come from Application Default Credentials,
-    ///                           i.e. the GOOGLE_APPLICATION_CREDENTIALS env var pointing at a service-account JSON file.
-    /// Firebase:Enabled=false -> log only (local development).
+    /// Firebase:Enabled=true  -> the individual / multicast / topic senders talk to FCM. Credentials come from Application Default
+    ///                           Credentials, i.e. the GOOGLE_APPLICATION_CREDENTIALS env var pointing at a service-account JSON file.
+    /// Firebase:Enabled=false -> the same interfaces are served by a channel that only logs (local development).
     /// </summary>
     public static IServiceCollection AddPushSender(this IServiceCollection services, IConfiguration config)
     {
@@ -25,12 +25,20 @@ public static class PushServiceCollectionExtensions
                 });
                 return FirebaseMessaging.GetMessaging(app);
             });
-            services.AddScoped<IPushSender, FcmPushSender>();
+            services.AddSingleton<IIndividualPushSender, FcmIndividualPushSender>();
+            services.AddSingleton<IMulticastPushSender, FcmMulticastPushSender>();
+            services.AddSingleton<ITopicPushSender, FcmTopicPushSender>();
         }
         else
         {
-            services.AddScoped<IPushSender, LoggingPushSender>();
+            services.AddSingleton<LoggingPushChannel>();
+            services.AddSingleton<IIndividualPushSender>(sp => sp.GetRequiredService<LoggingPushChannel>());
+            services.AddSingleton<IMulticastPushSender>(sp => sp.GetRequiredService<LoggingPushChannel>());
+            services.AddSingleton<ITopicPushSender>(sp => sp.GetRequiredService<LoggingPushChannel>());
         }
+
+        // Push used for the events consumed from RabbitMQ
+        services.AddScoped<IPushSender, NotificationPushSender>();
         return services;
     }
 }

@@ -1,0 +1,24 @@
+using FirebaseAdmin.Messaging;
+using Genkan.Notification.Domain.Dto;
+
+namespace Genkan.Notification.Infrastructure.Push;
+
+/// <summary>Builds the FCM message objects from the common <see cref="PushMessage"/> (notification + data, high priority on Android).</summary>
+internal static class FcmMessageBuilder
+{
+    // Fully qualified: inside Genkan.Notification.* the simple name "Notification" is our namespace.
+    private static FirebaseAdmin.Messaging.Notification ToNotification(PushMessage m) => new() { Title = m.Title, Body = m.Body };
+
+    private static Dictionary<string, string>? ToData(PushMessage m) => m.Data is null ? null : new Dictionary<string, string>(m.Data);
+
+    private static AndroidConfig HighPriority() => new() { Priority = Priority.High };
+
+    public static Message ForToken(string token, PushMessage m) =>
+        new() { Token = token, Notification = ToNotification(m), Data = ToData(m), Android = HighPriority() };
+
+    public static Message ForTopic(string topic, PushMessage m) =>
+        new() { Topic = topic, Notification = ToNotification(m), Data = ToData(m), Android = HighPriority() };
+
+    public static MulticastMessage ForTokens(IReadOnlyList<string> tokens, PushMessage m) =>
+        new() { Tokens = tokens, Notification = ToNotification(m), Data = ToData(m), Android = HighPriority() };
+}

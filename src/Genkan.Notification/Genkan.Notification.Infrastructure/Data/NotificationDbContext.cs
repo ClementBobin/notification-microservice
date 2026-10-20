@@ -8,6 +8,8 @@ public class NotificationDbContext(DbContextOptions<NotificationDbContext> optio
     public const string Schema = "notification";
     public DbSet<NotificationLog> Notifications => Set<NotificationLog>();
     public DbSet<DeviceToken> DeviceTokens => Set<DeviceToken>();
+    public DbSet<DeviceGroupMember> DeviceGroupMembers => Set<DeviceGroupMember>();
+    public DbSet<TopicSubscription> TopicSubscriptions => Set<TopicSubscription>();
 
     protected override void OnModelCreating(ModelBuilder b)
     {
@@ -35,6 +37,23 @@ public class NotificationDbContext(DbContextOptions<NotificationDbContext> optio
             e.HasIndex(x => x.UserId);
             e.Property(x => x.Token).HasMaxLength(1024);
             e.Property(x => x.Platform).HasMaxLength(20);
+        });
+
+        b.Entity<DeviceGroupMember>(e =>
+        {
+            e.ToTable("device_group_members", Schema);
+            e.HasKey(x => x.Id);
+            e.HasIndex(x => new { x.GroupName, x.UserId }).IsUnique();
+            e.Property(x => x.GroupName).HasMaxLength(100);
+        });
+
+        b.Entity<TopicSubscription>(e =>
+        {
+            e.ToTable("topic_subscriptions", Schema);
+            e.HasKey(x => x.Id);
+            e.HasIndex(x => new { x.Topic, x.UserId }).IsUnique();
+            e.HasIndex(x => x.UserId);
+            e.Property(x => x.Topic).HasMaxLength(900);
         });
     }
 }

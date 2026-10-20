@@ -59,6 +59,16 @@ Gateway: http://localhost:8080 · RabbitMQ UI: http://localhost:15672 · OpenAPI
 | POST | `/notifications/alerts` `{title,message}` → publishes `alert.broadcast` | Admin |
 | POST | `/notifications/devices` `{token,platform}` (`android`\|`ios`\|`web`) → registers the device's FCM token | any user |
 | POST | `/notifications/devices/unregister` `{token}` (call on logout) | any user |
+| GET | `/notifications/firebase-config` → `{apiKey, applicationId, messagingSenderId, projectId}` (public client identifiers, never the service-account key) | any user |
+| POST | `/notifications/push/individual` `{userId \| token, message}` | Admin |
+| POST | `/notifications/push/multicast` `{userIds, tokens, message}` | Admin |
+| GET | `/notifications/push/groups` | Admin |
+| PUT / DELETE | `/notifications/push/groups/{name}` (`{userIds}` replaces the members, an empty list deletes the group) | Admin |
+| POST | `/notifications/push/groups/{name}/send` `{title, body, data}` | Admin |
+| POST | `/notifications/push/topics/{topic}/send` `{title, body, data}` | Admin |
+| POST | `/notifications/push/topics/{topic}/subscribe` and `/unsubscribe` `{userIds}` | Admin |
+
+`message` is `{ "title": "...", "body": "...", "data": { "doorId": "102" } }` (data values are strings).
 
 ## Try it
 
@@ -88,6 +98,29 @@ The app registers its FCM token with `POST /notifications/devices`.
 
 Status of a stored notification: `Sent` (at least one device reached), `Skipped` (`no_registered_device`: still visible in `/notifications/me`), `Failed` (FCM error, see `error`).
 Tokens FCM reports as unregistered are deleted automatically.
+
+### Four ways to send on demand (Admin)
+
+| Kind | Target | Implementation |
+|---|---|---|
+| Individual | one token, or one user's most recently used device | `IndividualPushService` -> `FcmIndividualPushSender` |
+| Multicast | an ad-hoc list of tokens and/or users | `MulticastPushService` -> `FcmMulticastPushSender` (500 per FCM request) |
+| Device group | a named group of users kept by this service | `DeviceGroupPushService` -> multicast |
+| Topic | an FCM topic | `TopicPushService` -> `FcmTopicPushSender` |
+
+Device groups are a mapping kept in our own database (`device_group_members`) and resolved to tokens at send time:
+FCM's native device groups are deprecated (decommissioned on 2027-09-29), and Firebase's migration guide recommends exactly this approach.
+Topic subscriptions are stored per user (`topic_subscriptions`) and managed by an admin, so a device that registers a new token is
+re-subscribed to its user's topics. `FirebaseAdmin` must be >= 3.7.0 for topic management.
+
+### Firebase client config for the app
+
+`GET /notifications/firebase-config` returns the public identifiers the app needs to initialise Firebase at runtime
+(`apiKey`, `applicationId`, `messagingSenderId`, `projectId`, the values found in `google-services.json`). Configure them with
+`Firebase__Client__ApiKey`, `Firebase__Client__ApplicationId`, `Firebase__Client__MessagingSenderId` and `Firebase__Client__ProjectId`.
+The service-account key (`firebase-service-account.json`) contains a private key, stays on the server and is never returned by any route.
+
+### Enabling real pushes
 
 By default `Firebase:Enabled` is `false` and pushes are only logged. To send for real, add a service-account key and use the override file:
 
