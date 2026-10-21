@@ -1,13 +1,11 @@
 using Genkan.Auth.Application.Interfaces;
+using Genkan.Auth.Domain.Dto;
 using Genkan.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 
 namespace Genkan.Auth.Api.Controllers;
-
-public sealed record LoginRequest(string Email, string Password);
-public sealed record CreateUserRequest(string Email, string? DisplayName, string Password, string Role);
 
 [ApiController]
 [Route("auth")]

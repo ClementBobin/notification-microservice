@@ -1,19 +1,23 @@
 using FirebaseAdmin;
 using FirebaseAdmin.Messaging;
+using Genkan.Notification.Api.Configuration;
 using Genkan.Notification.Infrastructure.Interfaces;
 using Genkan.Notification.Infrastructure.Push;
 
 namespace Genkan.Notification.Api.Extensions;
 
-public static class PushServiceCollectionExtensions
+public static class PushExtensions
 {
     /// <summary>
     /// Firebase:Enabled=true  -> the individual / multicast / topic senders talk to FCM. Credentials come from Application Default
     ///                           Credentials, i.e. the GOOGLE_APPLICATION_CREDENTIALS env var pointing at a service-account JSON file.
     /// Firebase:Enabled=false -> the same interfaces are served by a channel that only logs (local development).
+    /// Also binds the public client identifiers served by GET /notifications/firebase-config.
     /// </summary>
     public static IServiceCollection AddPushSender(this IServiceCollection services, IConfiguration config)
     {
+        services.Configure<FirebaseClientOptions>(config.GetSection("Firebase:Client"));
+
         if (config.GetValue<bool>("Firebase:Enabled"))
         {
             services.AddSingleton(_ =>
@@ -40,5 +44,16 @@ public static class PushServiceCollectionExtensions
         // Push used for the events consumed from RabbitMQ
         services.AddScoped<IPushSender, NotificationPushSender>();
         return services;
+    }
+
+    /// <summary>
+    /// Fails at startup when Firebase is enabled but the credentials are missing or invalid,
+    /// instead of dead-lettering every RabbitMQ event later.
+    /// </summary>
+    public static WebApplication ValidatePushConfiguration(this WebApplication app)
+    {
+        if (app.Configuration.GetValue<bool>("Firebase:Enabled"))
+            app.Services.GetRequiredService<FirebaseMessaging>();
+        return app;
     }
 }

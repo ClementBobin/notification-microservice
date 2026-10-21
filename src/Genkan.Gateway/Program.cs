@@ -2,7 +2,7 @@ using Genkan.Gateway;
 using Genkan.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Logging.AddJsonConsole(o => o.IncludeScopes = true);
+builder.Logging.AddGenkanLogging();
 
 builder.Services.AddReverseProxy().LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
 builder.Services.AddHttpClient("auth", c =>

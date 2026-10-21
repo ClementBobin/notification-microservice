@@ -1,18 +1,17 @@
-namespace Genkan.Auth.Api.Extensions;
-
 using Genkan.Auth.Application.Interfaces;
 using Genkan.Auth.Application.Services;
-using Genkan.Auth.Infrastructure.Interfaces;
-using Genkan.Auth.Infrastructure.Repositories;
+
+namespace Genkan.Auth.Api.Extensions;
 
 public static class AppServicesExtensions
 {
-    public static IServiceCollection AddAppServices(this IServiceCollection services,
-        IConfiguration config)
+    /// <summary>Application layer: services and their options (infrastructure is registered by AddDatabase / AddRedis).</summary>
+    public static IServiceCollection AddAppServices(this IServiceCollection services, IConfiguration config)
     {
-        services.AddScoped<IUserRepository, UserRepository>();
+        services.Configure<AuthOptions>(config.GetSection("Auth"));
+        services.Configure<SeedOptions>(config.GetSection("Seed"));
         services.AddScoped<IAuthService, AuthService>();
-
+        services.AddScoped<IAdminSeeder, AdminSeeder>();
         return services;
     }
 }

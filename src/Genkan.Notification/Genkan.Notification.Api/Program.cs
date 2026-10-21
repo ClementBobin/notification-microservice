@@ -1,59 +1,25 @@
-using FirebaseAdmin.Messaging;
 using Genkan.Notification.Api.Extensions;
-using Genkan.Notification.Application.Interfaces;
-using Genkan.Notification.Application.Services;
-using Genkan.Notification.Infrastructure.Data;
-using Genkan.Notification.Infrastructure.Interfaces;
-using Genkan.Notification.Infrastructure.Messaging;
-using Genkan.Notification.Infrastructure.Repositories;
 using Genkan.Shared;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Logging.AddJsonConsole(o => o.IncludeScopes = true);
+builder.Logging.AddGenkanLogging();
 
 builder.Services.AddDatabase(builder.Configuration);
 builder.Services.AddPushSender(builder.Configuration);
-builder.Services.AddAppServices(builder.Configuration);
+builder.Services.AddAppServices();
 builder.Services.AddRabbitServices(builder.Configuration);
-builder.Services.AddGatewayHeaderAuth();
-builder.Services.AddControllers();
+builder.Services.AddGenkanApi();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-// Fail fast when Firebase is enabled but the credentials are missing or invalid,
-// instead of dead-lettering every RabbitMQ event later.
-if (app.Configuration.GetValue<bool>("Firebase:Enabled"))
-    app.Services.GetRequiredService<FirebaseMessaging>();
+app.ValidatePushConfiguration();
+await app.InitializeDatabaseAsync();
 
-using (var scope = app.Services.CreateScope())
-    await scope.ServiceProvider.GetRequiredService<NotificationDbContext>()
-        .EnsureSchemaAsync(NotificationDbContext.Schema, "notifications", app.Logger);
-
-app.UseCorrelationId();
-app.UseAuthentication();
-app.UseAuthorization();
+app.UseGenkanApi();
 
 app.MapOpenApi();
 app.MapControllers();
-
-async Task<IResult> Health(NotificationDbContext db, RabbitMqConnection rabbit, CancellationToken ct)
-{
-    try
-    {
-        var dbOk = await db.Database.CanConnectAsync(ct);
-        var mq = await rabbit.GetAsync(ct);
-        return dbOk && mq.IsOpen
-            ? Results.Ok(new { status = "ok", service = "notification" })
-            : Results.Json(new { status = "degraded", db = dbOk, rabbitmq = mq.IsOpen }, statusCode: 503);
-    }
-    catch (Exception ex)
-    {
-        return Results.Json(new { status = "unhealthy", error = ex.Message }, statusCode: 503);
-    }
-}
-app.MapGet("/health", Health);
-app.MapGet("/notifications/health", Health);
+app.MapNotificationHealth();
 
 app.Run();

@@ -1,19 +1,17 @@
+using Genkan.Notification.Infrastructure.Interfaces;
+using Genkan.Notification.Infrastructure.Messaging;
+
 namespace Genkan.Notification.Api.Extensions;
 
 public static class RabbitExtensions
 {
-    public static IServiceCollection AddRabbit(this IServiceCollection services,
-        IConfiguration config)
+    /// <summary>RabbitMQ connection, event publisher and the background consumer of the notification queue.</summary>
+    public static IServiceCollection AddRabbitServices(this IServiceCollection services, IConfiguration config)
     {
-        // ── RabbitMQ services ───────────────────────────────────────────────
         services.Configure<RabbitOptions>(config.GetSection("RabbitMq"));
         services.AddSingleton<RabbitMqConnection>();
         services.AddSingleton<IEventPublisher, RabbitMqEventPublisher>();
-
-        services.AddScoped<IEventHandler, NotificationProcessor>();
-
         services.AddHostedService<EventConsumer>();
-
         return services;
     }
 }

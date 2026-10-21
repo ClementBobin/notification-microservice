@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using Genkan.Notification.Application.Interfaces;
 using Genkan.Notification.Domain.Dto;
 using Genkan.Shared;
@@ -7,17 +6,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Genkan.Notification.Api.Controllers;
 
-public sealed record CreateAlertRequest(string Title, string Message);
-public sealed record RegisterDeviceRequest(string Token, string Platform);
-public sealed record UnregisterDeviceRequest(string Token);
-
 [ApiController]
 [Route("notifications")]
 public sealed class NotificationsController(INotificationService svc) : ControllerBase
 {
     private static readonly HashSet<string> Platforms = new(StringComparer.OrdinalIgnoreCase) { "android", "ios", "web" };
 
-    private Guid CurrentUserId => Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+    private Guid CurrentUserId => User.GetUserId();
 
     // Notifications of the current user (own + broadcast alerts)
     [HttpGet("me")]

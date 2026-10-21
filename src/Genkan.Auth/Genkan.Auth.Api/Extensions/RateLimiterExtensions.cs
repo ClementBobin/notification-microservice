@@ -1,19 +1,15 @@
-namespace Api.Extensions;
+using System.Threading.RateLimiting;
 
-using System.Text;
-
-using Infrastructure.Configuration;
-
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
+namespace Genkan.Auth.Api.Extensions;
 
 public static class RateLimiterExtensions
 {
-    public static IServiceCollection AddRateLimiter(this IServiceCollection services,
-        IConfiguration config)
+    /// <summary>
+    /// Policy "login" (used by [EnableRateLimiting("login")]): 10 requests / minute / client IP.
+    /// Behind the gateway the real client is the LAST X-Forwarded-For entry (appended by the gateway).
+    /// </summary>
+    public static IServiceCollection AddLoginRateLimiter(this IServiceCollection services)
     {
-        // 10 requests / minute / client IP on the login endpoint.
-        // Behind the gateway the real client is the LAST X-Forwarded-For entry (appended by the gateway).
         services.AddRateLimiter(o =>
         {
             o.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
@@ -29,7 +25,6 @@ public static class RateLimiterExtensions
                 });
             });
         });
-
         return services;
     }
 }

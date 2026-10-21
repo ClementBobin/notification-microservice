@@ -18,7 +18,7 @@ Each service is its own solution made of four layered projects; the root `Genkan
 
 ```
 src/
-  Genkan.Shared/                       contracts, gateway header auth, DB bootstrap
+  Genkan.Shared/                       contracts, gateway header auth, DB bootstrap, service defaults (logging, API setup, middleware order), health endpoints
   Genkan.Gateway/                      YARP reverse proxy (single project)
   Genkan.Auth/              Genkan.Auth.slnx
     Genkan.Auth.Api/                   web api: Controllers, Configuration, Extensions, Interceptors, Middleware
