@@ -8,7 +8,7 @@ public sealed class NotificationLogConfiguration : IEntityTypeConfiguration<Noti
 {
     public void Configure(EntityTypeBuilder<NotificationLog> e)
     {
-        e.ToTable("notifications", GenkanSchema.Name);
+        e.ToTable("notifications");
         e.HasKey(x => x.Id);
         // Idempotence per (event, recipient)
         e.HasIndex(x => new { x.EventId, x.RecipientUserId }).IsUnique();

@@ -8,7 +8,7 @@ public sealed class DeviceGroupMemberConfiguration : IEntityTypeConfiguration<De
 {
     public void Configure(EntityTypeBuilder<DeviceGroupMember> e)
     {
-        e.ToTable("device_group_members", GenkanSchema.Name);
+        e.ToTable("device_group_members");
         e.HasKey(x => x.Id);
         e.HasIndex(x => new { x.GroupName, x.UserId }).IsUnique();
         e.Property(x => x.GroupName).HasMaxLength(100);

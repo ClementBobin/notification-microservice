@@ -1,5 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <!-- Owns the "genkan" schema: the only project with migrations. Runs once (docker: restart "no") and exits. -->
+  <!-- Owns the database structure: the only project with migrations. Runs once (docker: restart "no") and exits. -->
   <PropertyGroup>
     <OutputType>Exe</OutputType>
   </PropertyGroup>

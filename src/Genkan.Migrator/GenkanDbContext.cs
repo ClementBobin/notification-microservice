@@ -5,19 +5,17 @@ using Microsoft.EntityFrameworkCore;
 namespace Genkan.Migrator;
 
 /// <summary>
-/// The complete model of the shared schema. Only the migrator uses it, so it is the only place that knows the
+/// The complete model of the shared database. Only the migrator uses it, so it is the only place that knows the
 /// relationships between tables of different services (foreign keys). Migrations are generated from this context.
 /// </summary>
 public sealed class GenkanDbContext(DbContextOptions<GenkanDbContext> options) : DbContext(options)
 {
     /// <summary>Single place where the context is configured (runtime and design time).</summary>
     public static void Configure(DbContextOptionsBuilder options, string? connectionString) =>
-        options.UseNpgsql(connectionString, npgsql => npgsql.MigrationsHistoryTable("__EFMigrationsHistory", GenkanSchema.Name));
+        options.UseNpgsql(connectionString); // no schema imposed: tables and __EFMigrationsHistory go where the connection string points (Search Path, default "public")
 
     protected override void OnModelCreating(ModelBuilder b)
     {
-        b.HasDefaultSchema(GenkanSchema.Name);
-
         b.ApplyConfiguration(new UserConfiguration());
         b.ApplyConfiguration(new NotificationLogConfiguration());
         b.ApplyConfiguration(new DeviceTokenConfiguration());

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Genkan.Notification.Infrastructure.Data;
 
-/// <summary>Runtime access to the notification tables of the shared schema. Tables and migrations are owned by Genkan.Migrator.</summary>
+/// <summary>Runtime access to the notification tables. Tables and migrations are owned by Genkan.Migrator.</summary>
 public class NotificationDbContext(DbContextOptions<NotificationDbContext> options) : DbContext(options)
 {
     public DbSet<NotificationLog> Notifications => Set<NotificationLog>();
@@ -14,7 +14,6 @@ public class NotificationDbContext(DbContextOptions<NotificationDbContext> optio
 
     protected override void OnModelCreating(ModelBuilder b)
     {
-        b.HasDefaultSchema(GenkanSchema.Name);
         b.ApplyConfiguration(new NotificationLogConfiguration());
         b.ApplyConfiguration(new DeviceTokenConfiguration());
         b.ApplyConfiguration(new DeviceGroupMemberConfiguration());

@@ -8,7 +8,7 @@ public sealed class TopicSubscriptionConfiguration : IEntityTypeConfiguration<To
 {
     public void Configure(EntityTypeBuilder<TopicSubscription> e)
     {
-        e.ToTable("topic_subscriptions", GenkanSchema.Name);
+        e.ToTable("topic_subscriptions");
         e.HasKey(x => x.Id);
         e.HasIndex(x => new { x.Topic, x.UserId }).IsUnique();
         e.HasIndex(x => x.UserId);

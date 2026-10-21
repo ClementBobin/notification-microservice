@@ -8,7 +8,7 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<User>
 {
     public void Configure(EntityTypeBuilder<User> e)
     {
-        e.ToTable("users", GenkanSchema.Name);
+        e.ToTable("users");
         e.HasKey(x => x.Id);
         e.HasIndex(x => x.Email).IsUnique();
         e.Property(x => x.Email).HasMaxLength(320);

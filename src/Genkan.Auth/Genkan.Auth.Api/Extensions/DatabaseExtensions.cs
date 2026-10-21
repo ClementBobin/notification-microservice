@@ -17,7 +17,7 @@ public static class DatabaseExtensions
         return services;
     }
 
-    /// <summary>Seeds the first administrator. The schema is created by Genkan.Migrator, which must have run before.</summary>
+    /// <summary>Seeds the first administrator. The tables are created by Genkan.Migrator, which must have run before.</summary>
     public static async Task InitializeDatabaseAsync(this WebApplication app)
     {
         using var scope = app.Services.CreateScope();
