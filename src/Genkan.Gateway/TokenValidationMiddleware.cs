@@ -10,7 +10,7 @@ public sealed record SessionDto(Guid UserId, string Email, string Role, string? 
 /// </summary>
 public sealed class TokenValidationMiddleware(RequestDelegate next, IHttpClientFactory httpFactory, ILogger<TokenValidationMiddleware> log)
 {
-    private static readonly HashSet<string> PublicPaths = new(StringComparer.OrdinalIgnoreCase)
+    internal static readonly HashSet<string> PublicPaths = new(StringComparer.OrdinalIgnoreCase)
     {
         "/health", "/auth/login", "/auth/health", "/notifications/health",
     };

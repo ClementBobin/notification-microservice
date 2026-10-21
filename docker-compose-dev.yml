@@ -114,6 +114,7 @@ services:
     environment:
       <<: *service-env
       Services__AuthUrl: http://auth:8080
+      Swagger__Enabled: ${SWAGGER_ENABLED:-false}   # true = combined Swagger UI of auth + notification on /swagger
       RateLimiting__Store: ${RATE_LIMIT_STORE:-Memory}   # Memory | Redis (Redis = counters shared by every gateway instance)
       ConnectionStrings__Redis: redis:6379,abortConnect=false
     ports:

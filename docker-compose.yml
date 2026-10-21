@@ -143,6 +143,7 @@ services:
     environment:
       <<: [*service-env, *redis-env]
       Services__AuthUrl: http://auth:8080
+      Swagger__Enabled: ${SWAGGER_ENABLED:-false}   # true = combined Swagger UI of auth + notification on /swagger (keep false in production)
       RateLimiting__Store: ${RATE_LIMIT_STORE:-Redis}   # Memory | Redis (Redis = counters shared by every gateway instance)
       RateLimiting__Enabled: ${RATE_LIMIT_ENABLED:-true}
       RateLimiting__Policies__user__Key: ${RATE_LIMIT_USER_KEY:-user}   # the key used to identify a user (e.g. "user" = X-User-Id header, "ip" = client IP)

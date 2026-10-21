@@ -43,7 +43,7 @@ cp .env.example .env        # then edit the secrets
 docker compose up -d --build postgres redis rabbitmq auth notification gateway   
 ```
 
-Gateway: http://localhost:8080 · RabbitMQ UI: http://localhost:15672 · OpenAPI (inside the network): `/openapi/v1.json` on each service.
+Gateway: http://localhost:8080 · RabbitMQ UI: http://localhost:15672 · OpenAPI (inside the network): `/openapi/v1.json` on each service · Combined Swagger UI: http://localhost:8080/swagger when `SWAGGER_ENABLED=true` (see *Swagger*).
 
 ## Endpoints (all through the gateway)
 
@@ -156,6 +156,28 @@ Environment overrides: `RateLimiting__Policies__user__Capacity=60`, `RateLimitin
 - `Store: Redis` shares the buckets between all gateway instances (atomic Lua script, Redis clock). If Redis is unreachable requests are allowed and a warning is logged.
 - Another limit, for example per IP before authentication, is another entry in `Policies` plus `app.UseGatewayRateLimit("ip")` before `TokenValidationMiddleware`.
 - Auth keeps its own, stricter limit on `POST /auth/login` (10 / min / IP, per Auth instance).
+
+## Swagger (gateway)
+
+The gateway can serve one Swagger UI for every service. It is **off by default**; switch it with one variable in `.env`:
+
+```bash
+SWAGGER_ENABLED=true    # true = show, false = hide (restart the gateway after changing it)
+```
+
+| URL | Content |
+|---|---|
+| `GET /swagger` | Swagger UI (assets come from the jsdelivr CDN, so the browser needs internet access) |
+| `GET /swagger/openapi.json` | the merged OpenAPI document |
+
+The gateway downloads `/openapi/v1.json` from each service (inside the network), merges paths, tags and schemas (a schema name used by two services with
+different definitions is prefixed with the service name) and caches the result for 60 s. Use **Authorize** with the token from `POST /auth/login`;
+"Try it out" calls the gateway, so the token check and the rate limit apply as usual. If a service is down, the others are still shown and the
+description says which one is unreachable.
+
+Settings (`Swagger` section of `src/Genkan.Gateway/appsettings.json`, override with `Swagger__...` environment variables): `Enabled`, `Title`, `CacheSeconds`
+and `Sources` (`Swagger__Sources__0__Url=http://auth:8080/openapi/v1.json`; add an entry for every new service). The two URLs are public when enabled
+(like `/health`), so leave it `false` on anything exposed to the internet. When disabled, `/swagger` is not registered at all.
 
 ## Notes
 
