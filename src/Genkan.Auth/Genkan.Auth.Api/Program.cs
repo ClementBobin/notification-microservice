@@ -7,7 +7,6 @@ builder.Logging.AddGenkanLogging();
 builder.Services.AddDatabase(builder.Configuration);
 builder.Services.AddRedis(builder.Configuration);
 builder.Services.AddAppServices(builder.Configuration);
-builder.Services.AddLoginRateLimiter();
 builder.Services.AddGenkanApi();
 builder.Services.AddOpenApi();
 

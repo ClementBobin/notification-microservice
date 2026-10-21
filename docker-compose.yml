@@ -93,6 +93,8 @@ services:
     environment:
       <<: *service-env
       Services__AuthUrl: http://auth:8080
+      RateLimiting__Store: ${RATE_LIMIT_STORE:-Memory}   # Memory | Redis (Redis = counters shared by every gateway instance)
+      ConnectionStrings__Redis: redis:6379,abortConnect=false
     ports:
       - "${GATEWAY_PORT:-8080}:8080"   # the only service exposed to clients
 

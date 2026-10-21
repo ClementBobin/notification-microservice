@@ -131,6 +131,31 @@ docker compose -f docker-compose.yml -f docker-compose.firebase.yml up -d --buil
 
 With `Firebase:Enabled=true` the service refuses to start if the credentials cannot be loaded.
 
+## Rate limiting (gateway)
+
+A token bucket in front of the proxy, applied after the token check: one bucket per user (`X-User-Id`), and per client IP for requests
+without a user (login). With the default policy a bucket holds 30 tokens, every request takes one, and tokens come back continuously at
+30 per 60 s (one every 2 s) instead of all at once when a fixed minute ends. An empty bucket answers `429` with `Retry-After`
+(seconds until one token is back); every response carries `X-RateLimit-Limit` and `X-RateLimit-Remaining`. `/health` is never limited.
+
+```json
+"RateLimiting": {
+  "Enabled": true,
+  "Store": "Memory",
+  "Policies": {
+    "user": { "Key": "User", "Capacity": 30, "RefillTokens": 30, "RefillPeriodSeconds": 60 }
+  }
+}
+```
+
+Environment overrides: `RateLimiting__Policies__user__Capacity=60`, `RateLimiting__Enabled=false`, `RATE_LIMIT_STORE=Redis` (compose).
+`Capacity` is the largest burst after being idle; `RefillTokens` / `RefillPeriodSeconds` is the sustained rate.
+
+- `Store: Memory` keeps the buckets in the gateway process. With several gateway instances each instance counts on its own (N instances allow about N times the limit).
+- `Store: Redis` shares the buckets between all gateway instances (atomic Lua script, Redis clock). If Redis is unreachable requests are allowed and a warning is logged.
+- Another limit, for example per IP before authentication, is another entry in `Policies` plus `app.UseGatewayRateLimit("ip")` before `TokenValidationMiddleware`.
+- Auth keeps its own, stricter limit on `POST /auth/login` (10 / min / IP, per Auth instance).
+
 ## Notes
 
 - Tables are created by `EnsureSchemaAsync` at startup **only when the probe table is missing**; a new table or column added later is not applied to an existing database. Switch to EF migrations (history table per schema) once the model settles.
