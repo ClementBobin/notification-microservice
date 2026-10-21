@@ -1,5 +1,6 @@
 using Genkan.Migrator;
 using Genkan.Shared;
+using Genkan.Shared.Configurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 

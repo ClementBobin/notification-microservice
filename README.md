@@ -168,9 +168,9 @@ migrations and exits; `auth` and `notification` have `depends_on: migrator: serv
 
 | Project | Role |
 |---|---|
-| `Genkan.Data` | schema name + entity mappings (`IEntityTypeConfiguration<T>`), the single definition of every table |
+| `Genkan.Shared` (`Entities/`, `Configurations/`) | schema name + entities + mappings (`IEntityTypeConfiguration<T>`), the single definition of every table |
 | `Genkan.Migrator` | `GenkanDbContext` (full model **with the cross-service foreign keys**), migrations, one `__EFMigrationsHistory` in schema `genkan` |
-| `AuthDbContext`, `NotificationDbContext` | runtime access to their own tables, using the mappings from `Genkan.Data`; they never migrate |
+| `AuthDbContext`, `NotificationDbContext` | runtime access to their own tables, using the mappings from `Genkan.Shared`; they never migrate |
 
 ```bash
 dotnet tool install --global dotnet-ef
@@ -179,6 +179,6 @@ docker compose up -d --build        # migrator runs, exits 0, then auth / notifi
 # outside docker: dotnet run --project src/Genkan.Migrator   (ConnectionStrings__Postgres must be set)
 ```
 
-To change the model: edit the entity / its configuration in `Genkan.Data`, add a migration, commit it, deploy. Foreign keys are declared only in `GenkanDbContext`.
+To change the model: edit the entity / its configuration in `Genkan.Shared`, add a migration, commit it, deploy. Foreign keys are declared only in `GenkanDbContext`.
 Table names are global to the schema, so two services must not use the same table name. Without any migration the migrator creates the tables directly (development only).
 Databases created by the previous layout (schemas `auth` / `notification`) are not migrated automatically: `docker compose down -v` once.
