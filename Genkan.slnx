@@ -2,6 +2,7 @@
   <Folder Name="/src/">
     <Project Path="src/Genkan.Shared/Genkan.Shared.csproj" />
     <Project Path="src/Genkan.Gateway/Genkan.Gateway.csproj" />
+    <Project Path="src/Genkan.Migrator/Genkan.Migrator.csproj" />
   </Folder>
   <Folder Name="/src/Auth/">
     <Project Path="src/Genkan.Auth/Genkan.Auth.Domain/Genkan.Auth.Domain.csproj" />

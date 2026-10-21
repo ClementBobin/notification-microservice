@@ -1,13 +1,16 @@
 using System.Text.Json;
 using Genkan.Notification.Application.Interfaces;
 using Genkan.Notification.Domain.Dto;
-using Genkan.Notification.Domain.Entities;
 using Genkan.Notification.Infrastructure.Interfaces;
 using Genkan.Shared;
+using Genkan.Shared.Entities;
+using Microsoft.Extensions.Logging;
 
 namespace Genkan.Notification.Application.Services;
 
-public sealed class NotificationService(INotificationRepository repo, IDeviceTokenRepository devices, IEventPublisher publisher) : INotificationService
+public sealed class NotificationService(
+    INotificationRepository repo, IDeviceTokenRepository devices, IEventPublisher publisher,
+    ITopicPushService topics, ILogger<NotificationService> log) : INotificationService
 {
     private static NotificationDto ToDto(NotificationLog n) => new(
         n.Id, n.EventId, n.EventType, n.IsBroadcast ? null : n.RecipientUserId, n.IsBroadcast,
@@ -31,8 +34,20 @@ public sealed class NotificationService(INotificationRepository repo, IDeviceTok
         return envelope.EventId;
     }
 
-    public Task RegisterDeviceAsync(Guid userId, string token, string platform, CancellationToken ct) =>
-        devices.UpsertAsync(userId, token, platform, ct);
+    public async Task RegisterDeviceAsync(Guid userId, string token, string platform, CancellationToken ct)
+    {
+        await devices.UpsertAsync(userId, token, platform, ct);
+
+        // FCM ties topic subscriptions to the token: re-subscribe this one (best effort, never fails the registration).
+        try
+        {
+            await topics.SubscribeDeviceToUserTopicsAsync(userId, token, ct);
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            log.LogWarning(ex, "Could not re-subscribe the device of user {UserId} to its topics", userId);
+        }
+    }
 
     public Task<bool> UnregisterDeviceAsync(Guid userId, string token, CancellationToken ct) =>
         devices.RemoveAsync(userId, token, ct);

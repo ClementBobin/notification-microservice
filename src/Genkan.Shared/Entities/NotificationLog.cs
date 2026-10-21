@@ -1,4 +1,4 @@
-namespace Genkan.Notification.Domain.Entities;
+namespace Genkan.Shared.Entities;
 
 public static class NotificationStatus
 {

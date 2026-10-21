@@ -1,4 +1,4 @@
-using Genkan.Notification.Domain.Entities;
+using Genkan.Shared.Entities;
 using Genkan.Notification.Infrastructure.Data;
 using Genkan.Notification.Infrastructure.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -45,6 +45,16 @@ public sealed class DeviceTokenRepository(NotificationDbContext db) : IDeviceTok
         if (userId is { } id) q = q.Where(d => d.UserId == id);
         return await q.Select(d => d.Token).ToListAsync(ct);
     }
+
+    public async Task<IReadOnlyList<string>> GetTokensForUsersAsync(IReadOnlyCollection<Guid> userIds, CancellationToken ct)
+    {
+        var ids = userIds.ToList();
+        return await db.DeviceTokens.AsNoTracking().Where(d => ids.Contains(d.UserId)).Select(d => d.Token).ToListAsync(ct);
+    }
+
+    public Task<string?> GetLatestTokenAsync(Guid userId, CancellationToken ct) =>
+        db.DeviceTokens.AsNoTracking().Where(d => d.UserId == userId)
+            .OrderByDescending(d => d.LastSeenAt).Select(d => d.Token).FirstOrDefaultAsync(ct);
 
     public Task RemoveTokensAsync(IReadOnlyCollection<string> tokens, CancellationToken ct)
     {

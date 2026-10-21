@@ -1,4 +1,4 @@
-using Genkan.Notification.Domain.Entities;
+using Genkan.Shared.Entities;
 
 namespace Genkan.Notification.Infrastructure.Interfaces;
 

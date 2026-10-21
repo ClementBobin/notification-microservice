@@ -8,6 +8,7 @@ COPY Genkan.slnx Directory.Build.props ./
 # 2. Copy all project files maintaining their directory structure (restore layer cache)
 COPY src/Genkan.Shared/Genkan.Shared.csproj src/Genkan.Shared/
 COPY src/Genkan.Gateway/Genkan.Gateway.csproj src/Genkan.Gateway/
+COPY src/Genkan.Migrator/Genkan.Migrator.csproj src/Genkan.Migrator/
 
 COPY src/Genkan.Auth/Genkan.Auth.Domain/Genkan.Auth.Domain.csproj src/Genkan.Auth/Genkan.Auth.Domain/
 COPY src/Genkan.Auth/Genkan.Auth.Infrastructure/Genkan.Auth.Infrastructure.csproj src/Genkan.Auth/Genkan.Auth.Infrastructure/

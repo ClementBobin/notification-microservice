@@ -32,6 +32,8 @@ jobs:
             image: auth
           - project: Genkan.Notification/Genkan.Notification.Api/Genkan.Notification.Api.csproj
             image: notification
+          - project: Genkan.Migrator/Genkan.Migrator.csproj
+            image: migrator
 
     steps:
       - name: Checkout

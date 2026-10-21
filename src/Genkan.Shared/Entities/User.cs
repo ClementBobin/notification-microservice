@@ -1,4 +1,4 @@
-namespace Genkan.Auth.Domain.Entities;
+namespace Genkan.Shared.Entities;
 
 public class User
 {
