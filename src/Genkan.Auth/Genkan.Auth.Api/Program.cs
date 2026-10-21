@@ -15,7 +15,6 @@ var app = builder.Build();
 await app.InitializeDatabaseAsync();
 
 app.UseGenkanApi();
-app.UseRateLimiter();
 
 app.MapOpenApi();
 app.MapControllers();
