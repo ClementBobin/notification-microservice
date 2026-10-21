@@ -143,7 +143,12 @@ services:
     environment:
       <<: [*service-env, *redis-env]
       Services__AuthUrl: http://auth:8080
-      RateLimiting__Store: ${RATE_LIMIT_STORE:-Memory}   # Memory | Redis (Redis = counters shared by every gateway instance)
+      RateLimiting__Store: ${RATE_LIMIT_STORE:-Redis}   # Memory | Redis (Redis = counters shared by every gateway instance)
+      RateLimiting__Enabled: ${RATE_LIMIT_ENABLED:-true}
+      RateLimiting__Policies__user__Key: ${RATE_LIMIT_USER_KEY:-user}   # the key used to identify a user (e.g. "user" = X-User-Id header, "ip" = client IP)
+      RateLimiting__Policies__user__Capacity: ${RATE_LIMIT_USER_CAPACITY:-30}
+      RateLimiting__Policies__user__RefillTokens: ${RATE_LIMIT_USER_REFILL_TOKENS:-30}
+      RateLimiting__Policies__user__RefillPeriodSeconds: ${RATE_LIMIT_USER_REFILL_PERIOD_SECONDS:-60}
     depends_on:
       auth:
         condition: service_healthy
