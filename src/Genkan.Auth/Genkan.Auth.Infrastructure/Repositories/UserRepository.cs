@@ -1,4 +1,4 @@
-using Genkan.Auth.Domain.Entities;
+using Genkan.Shared.Entities;
 using Genkan.Auth.Infrastructure.Data;
 using Genkan.Auth.Infrastructure.Interfaces;
 using Microsoft.EntityFrameworkCore;

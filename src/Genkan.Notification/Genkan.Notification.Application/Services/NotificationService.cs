@@ -1,9 +1,9 @@
 using System.Text.Json;
 using Genkan.Notification.Application.Interfaces;
 using Genkan.Notification.Domain.Dto;
-using Genkan.Notification.Domain.Entities;
 using Genkan.Notification.Infrastructure.Interfaces;
 using Genkan.Shared;
+using Genkan.Shared.Entities;
 using Microsoft.Extensions.Logging;
 
 namespace Genkan.Notification.Application.Services;

@@ -1,14 +1,15 @@
 # Genkan – API Gateway, Auth, Notification
 
 ```
-clients ──HTTP──▶ gateway ──▶ auth          (PostgreSQL schema "auth",  Redis sessions)
-                     └──────▶ notification  (PostgreSQL schema "notification")
+clients ──HTTP──▶ gateway ──▶ auth          (Redis sessions)
+                     └──────▶ notification
+        both use the PostgreSQL schema "genkan", created and migrated by the one-shot `migrator` container
                                   ▲
         RabbitMQ topic exchange "workplace.events" ─ queue "notification-service"
         bindings: booking.#  access.#  visitor.#  alert.#   (dead-letter: workplace.events.dlx)
 ```
 
-One PostgreSQL database (`genkan`), one schema per service, tables created at startup.
+One PostgreSQL database (`genkan`) and one shared schema (`genkan`). Only `Genkan.Migrator` creates or alters it; the services just read and write their tables (see *Database*).
 Only the gateway is published on the host. Services trust the `X-User-*` headers set by the gateway
 (it strips client-supplied ones), so never expose `auth` / `notification` directly.
 
@@ -158,4 +159,26 @@ Environment overrides: `RateLimiting__Policies__user__Capacity=60`, `RateLimitin
 
 ## Notes
 
-- Tables are created by `EnsureSchemaAsync` at startup **only when the probe table is missing**; a new table or column added later is not applied to an existing database. Switch to EF migrations (history table per schema) once the model settles.
+- Schema changes go through `Genkan.Migrator` (see *Database*); services never create or alter tables.
+
+## Database
+
+One schema (`genkan`), one owner: **`Genkan.Migrator`** is a console project run as its own container (`restart: "no"`). It applies the EF Core
+migrations and exits; `auth` and `notification` have `depends_on: migrator: service_completed_successfully`, so they start on an up-to-date schema.
+
+| Project | Role |
+|---|---|
+| `Genkan.Data` | schema name + entity mappings (`IEntityTypeConfiguration<T>`), the single definition of every table |
+| `Genkan.Migrator` | `GenkanDbContext` (full model **with the cross-service foreign keys**), migrations, one `__EFMigrationsHistory` in schema `genkan` |
+| `AuthDbContext`, `NotificationDbContext` | runtime access to their own tables, using the mappings from `Genkan.Data`; they never migrate |
+
+```bash
+dotnet tool install --global dotnet-ef
+dotnet ef migrations add InitialCreate -p src/Genkan.Migrator -o Migrations     # again for every model change
+docker compose up -d --build        # migrator runs, exits 0, then auth / notification start
+# outside docker: dotnet run --project src/Genkan.Migrator   (ConnectionStrings__Postgres must be set)
+```
+
+To change the model: edit the entity / its configuration in `Genkan.Data`, add a migration, commit it, deploy. Foreign keys are declared only in `GenkanDbContext`.
+Table names are global to the schema, so two services must not use the same table name. Without any migration the migrator creates the tables directly (development only).
+Databases created by the previous layout (schemas `auth` / `notification`) are not migrated automatically: `docker compose down -v` once.

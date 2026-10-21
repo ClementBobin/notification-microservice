@@ -4,5 +4,6 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.*" />
     <PackageReference Include="StackExchange.Redis" Version="2.*" />
     <ProjectReference Include="..\Genkan.Auth.Domain\Genkan.Auth.Domain.csproj" />
+    <ProjectReference Include="..\..\Genkan.Data\Genkan.Data.csproj" />
   </ItemGroup>
 </Project>

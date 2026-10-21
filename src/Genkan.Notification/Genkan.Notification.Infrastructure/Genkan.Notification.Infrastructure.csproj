@@ -6,6 +6,7 @@
     <!-- >= 3.7.0: earlier versions manage topics through the legacy IID API that is being decommissioned -->
     <PackageReference Include="FirebaseAdmin" Version="[3.7.0,4.0.0)" />
     <ProjectReference Include="..\Genkan.Notification.Domain\Genkan.Notification.Domain.csproj" />
+    <ProjectReference Include="..\..\Genkan.Data\Genkan.Data.csproj" />
     <ProjectReference Include="..\..\Genkan.Shared\Genkan.Shared.csproj" />
   </ItemGroup>
 </Project>

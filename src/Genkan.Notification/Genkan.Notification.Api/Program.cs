@@ -14,7 +14,6 @@ builder.Services.AddOpenApi();
 var app = builder.Build();
 
 app.ValidatePushConfiguration();
-await app.InitializeDatabaseAsync();
 
 app.UseGenkanApi();
 

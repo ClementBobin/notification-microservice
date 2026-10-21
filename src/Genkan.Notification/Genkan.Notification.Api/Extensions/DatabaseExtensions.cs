@@ -18,12 +18,4 @@ public static class DatabaseExtensions
         services.AddScoped<ITopicSubscriptionRepository, TopicSubscriptionRepository>();
         return services;
     }
-
-    /// <summary>Creates the schema and tables (retries while PostgreSQL starts).</summary>
-    public static async Task InitializeDatabaseAsync(this WebApplication app)
-    {
-        using var scope = app.Services.CreateScope();
-        await scope.ServiceProvider.GetRequiredService<NotificationDbContext>()
-            .EnsureSchemaAsync(NotificationDbContext.Schema, "notifications", app.Logger);
-    }
 }

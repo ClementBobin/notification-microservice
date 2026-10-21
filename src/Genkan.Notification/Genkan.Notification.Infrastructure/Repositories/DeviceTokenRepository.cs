@@ -1,4 +1,4 @@
-using Genkan.Notification.Domain.Entities;
+using Genkan.Shared.Entities;
 using Genkan.Notification.Infrastructure.Data;
 using Genkan.Notification.Infrastructure.Interfaces;
 using Microsoft.EntityFrameworkCore;

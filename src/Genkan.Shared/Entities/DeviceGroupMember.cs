@@ -1,4 +1,4 @@
-namespace Genkan.Notification.Domain.Entities;
+namespace Genkan.Shared.Entities;
 
 /// <summary>
 /// Membership of a user in a named device group. FCM's own device groups are deprecated (shut down 2027-09-29),

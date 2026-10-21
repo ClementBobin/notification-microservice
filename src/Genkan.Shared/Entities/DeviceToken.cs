@@ -1,4 +1,4 @@
-namespace Genkan.Notification.Domain.Entities;
+namespace Genkan.Shared.Entities;
 
 /// <summary>An FCM registration token of one device belonging to one user.</summary>
 public class DeviceToken

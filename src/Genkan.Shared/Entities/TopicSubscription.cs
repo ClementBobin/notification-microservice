@@ -1,4 +1,4 @@
-namespace Genkan.Notification.Domain.Entities;
+namespace Genkan.Shared.Entities;
 
 /// <summary>
 /// A user's subscription to an FCM topic. Kept so that a rotated or newly registered token can be re-subscribed

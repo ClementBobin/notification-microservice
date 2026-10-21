@@ -1,4 +1,4 @@
-using Genkan.Auth.Domain.Entities;
+using Genkan.Shared.Entities;
 
 namespace Genkan.Auth.Infrastructure.Interfaces;
 

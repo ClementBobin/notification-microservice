@@ -17,12 +17,10 @@ public static class DatabaseExtensions
         return services;
     }
 
-    /// <summary>Creates the schema and tables (retries while PostgreSQL starts), then seeds the first administrator.</summary>
+    /// <summary>Seeds the first administrator. The schema is created by Genkan.Migrator, which must have run before.</summary>
     public static async Task InitializeDatabaseAsync(this WebApplication app)
     {
         using var scope = app.Services.CreateScope();
-        await scope.ServiceProvider.GetRequiredService<AuthDbContext>()
-            .EnsureSchemaAsync(AuthDbContext.Schema, "users", app.Logger);
         await scope.ServiceProvider.GetRequiredService<IAdminSeeder>().SeedAsync(default);
     }
 }
