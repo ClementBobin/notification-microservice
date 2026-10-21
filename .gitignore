@@ -4,3 +4,4 @@ obj/
 .vs/
 .idea/
 secrets/
+k8s/secrets.yaml
