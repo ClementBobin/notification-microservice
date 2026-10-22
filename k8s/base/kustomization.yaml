@@ -11,6 +11,7 @@ resources:
   - migrator-job.yaml
   - gateway.yaml
   - auth.yaml
+  - lab.yaml
   - notification.yaml
   - ingress.yaml
   - networkpolicy.yaml
@@ -24,6 +25,8 @@ images:
   - name: ghcr.io/clementbobin/notification-microservice/gateway
     newTag: latest
   - name: ghcr.io/clementbobin/notification-microservice/auth
+    newTag: latest
+  - name: ghcr.io/clementbobin/notification-microservice/lab
     newTag: latest
   - name: ghcr.io/clementbobin/notification-microservice/notification
     newTag: latest

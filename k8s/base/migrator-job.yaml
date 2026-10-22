@@ -1,4 +1,4 @@
-# Owns the database structure: applies the EF Core migrations once, then exits. auth and notification assume the tables exist,
+# Owns the database structure: applies the EF Core migrations once, then exits. auth, lab and notification assume the tables exist,
 # so this Job must be complete before they start (deploy.sh does it in that order). A Job cannot be updated in place:
 # delete it before applying a new version (deploy.sh does that too).
 #

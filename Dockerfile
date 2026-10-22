@@ -15,6 +15,11 @@ COPY src/Genkan.Auth/Genkan.Auth.Infrastructure/Genkan.Auth.Infrastructure.cspro
 COPY src/Genkan.Auth/Genkan.Auth.Application/Genkan.Auth.Application.csproj src/Genkan.Auth/Genkan.Auth.Application/
 COPY src/Genkan.Auth/Genkan.Auth.Api/Genkan.Auth.Api.csproj src/Genkan.Auth/Genkan.Auth.Api/
 
+COPY src/Genkan.Lab/Genkan.Lab.Domain/Genkan.Lab.Domain.csproj src/Genkan.Lab/Genkan.Lab.Domain/
+COPY src/Genkan.Lab/Genkan.Lab.Infrastructure/Genkan.Lab.Infrastructure.csproj src/Genkan.Lab/Genkan.Lab.Infrastructure/
+COPY src/Genkan.Lab/Genkan.Lab.Application/Genkan.Lab.Application.csproj src/Genkan.Lab/Genkan.Lab.Application/
+COPY src/Genkan.Lab/Genkan.Lab.Api/Genkan.Lab.Api.csproj src/Genkan.Lab/Genkan.Lab.Api/
+
 COPY src/Genkan.Notification/Genkan.Notification.Domain/Genkan.Notification.Domain.csproj src/Genkan.Notification/Genkan.Notification.Domain/
 COPY src/Genkan.Notification/Genkan.Notification.Infrastructure/Genkan.Notification.Infrastructure.csproj src/Genkan.Notification/Genkan.Notification.Infrastructure/
 COPY src/Genkan.Notification/Genkan.Notification.Application/Genkan.Notification.Application.csproj src/Genkan.Notification/Genkan.Notification.Application/

@@ -1,4 +1,4 @@
-# auth and notification trust the X-User-* headers that the gateway sets after checking the token. Anything that can reach them
+# auth, lab and notification trust the X-User-* headers that the gateway sets after checking the token. Anything that can reach them
 # directly can claim to be any user, so only the gateway may call them. Needs a CNI that enforces NetworkPolicy (Calico, Cilium...).
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -9,7 +9,7 @@ spec:
     matchExpressions:
       - key: app.kubernetes.io/name
         operator: In
-        values: [auth, notification]
+        values: [auth, lab, notification]
   policyTypes: [Ingress]
   ingress:
     - from:

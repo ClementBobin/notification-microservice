@@ -29,7 +29,7 @@ fi
 
 # 2. everything else
 kubectl apply -f "$rendered" -l 'app.kubernetes.io/component!=migrator'
-for d in auth notification gateway; do
+for d in auth lab notification gateway; do
   kubectl -n "$ns" rollout status "deploy/$d" --timeout=300s
 done
 echo "Deployed."

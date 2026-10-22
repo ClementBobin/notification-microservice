@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.*" />
+    <ProjectReference Include="..\Genkan.Lab.Application\Genkan.Lab.Application.csproj" />
+    <ProjectReference Include="..\Genkan.Lab.Domain\Genkan.Lab.Domain.csproj" />
+    <ProjectReference Include="..\Genkan.Lab.Infrastructure\Genkan.Lab.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Genkan.Shared\Genkan.Shared.csproj" />
+  </ItemGroup>
+</Project>

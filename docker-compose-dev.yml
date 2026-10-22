@@ -43,7 +43,7 @@ services:
       retries: 10
 
   # Owns the database schema: applies the EF Core migrations once, then exits (restart: "no").
-  # auth and notification only start after it completed successfully.
+  # auth, lab and notification only start after it completed successfully.
   migrator:
     build:
       context: .
@@ -79,6 +79,30 @@ services:
       retries: 10
       start_period: 15s
 
+  lab:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_PROJECT: Genkan.Lab/Genkan.Lab.Api/Genkan.Lab.Api.csproj
+    environment:
+      <<: *service-env
+      ConnectionStrings__Postgres: Host=postgres;Database=genkan;Username=genkan;Password=${POSTGRES_PASSWORD}
+      RabbitMq__Host: rabbitmq
+      RabbitMq__User: ${RABBITMQ_USER}
+      RabbitMq__Password: ${RABBITMQ_PASSWORD}
+    depends_on:
+      migrator:
+        condition: service_completed_successfully
+      rabbitmq:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 15s
+
   notification:
     build:
       context: .
@@ -98,6 +122,10 @@ services:
     depends_on:
       migrator:
         condition: service_completed_successfully
+      rabbitmq:
+        condition: service_healthy
+      lab:
+        condition: service_healthy   # the device list comes from lab over RabbitMQ
     healthcheck:
       test: ["CMD", "curl", "-fsS", "http://localhost:8080/health"]
       interval: 10s
@@ -114,7 +142,7 @@ services:
     environment:
       <<: *service-env
       Services__AuthUrl: http://auth:8080
-      Swagger__Enabled: ${SWAGGER_ENABLED:-false}   # true = combined Swagger UI of auth + notification on /swagger
+      Swagger__Enabled: ${SWAGGER_ENABLED:-false}   # true = combined Swagger UI of auth + lab + notification on /swagger
       RateLimiting__Store: ${RATE_LIMIT_STORE:-Memory}   # Memory | Redis (Redis = counters shared by every gateway instance)
       ConnectionStrings__Redis: redis:6379,abortConnect=false
     ports:

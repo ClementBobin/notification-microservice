@@ -1,19 +1,21 @@
 using Genkan.Notification.Domain.Dto;
-using Genkan.Shared.Entities;
 using Genkan.Notification.Infrastructure.Interfaces;
+using Genkan.Shared;
+using Genkan.Shared.Entities;
 using Microsoft.Extensions.Logging;
 
 namespace Genkan.Notification.Infrastructure.Push;
 
 /// <summary>
 /// Push used for events received from RabbitMQ: all devices of the recipient (every device for a broadcast), sent as a multicast.
+/// The devices come from the in-memory <see cref="IDeviceCache"/> fed by the lab service, never from the database.
 /// Whether the multicast goes to Firebase or only to the log is decided by the registered <see cref="IMulticastPushSender"/>.
 /// </summary>
-public sealed class NotificationPushSender(IDeviceTokenRepository devices, IMulticastPushSender multicast, ILogger<NotificationPushSender> log) : IPushSender
+public sealed class NotificationPushSender(IDeviceCache devices, IMulticastPushSender multicast, ILabBus lab, ILogger<NotificationPushSender> log) : IPushSender
 {
     public async Task<int> SendAsync(NotificationLog n, CancellationToken ct)
     {
-        var tokens = await devices.GetTokensAsync(n.IsBroadcast ? null : n.RecipientUserId, ct);
+        var tokens = devices.GetTokens(n.IsBroadcast ? null : n.RecipientUserId);
         if (tokens.Count == 0)
         {
             log.LogInformation("No registered device for notification {Id}, nothing to push", n.Id);
@@ -28,13 +30,24 @@ public sealed class NotificationPushSender(IDeviceTokenRepository devices, IMult
         });
 
         var result = await multicast.SendAsync(tokens, message, ct);
-        if (result.InvalidTokens.Count > 0)
-        {
-            await devices.RemoveTokensAsync(result.InvalidTokens, ct);
-            log.LogInformation("Removed {Count} unregistered device token(s)", result.InvalidTokens.Count);
-        }
+        await ReportInvalidAsync(result, ct);
 
         if (result.Accepted == 0 && result.Error is not null) throw new InvalidOperationException(result.Error);
         return result.Accepted;
+    }
+
+    private async Task ReportInvalidAsync(PushResult result, CancellationToken ct)
+    {
+        if (result.InvalidTokens.Count == 0) return;
+        try
+        {
+            // The lab service owns the devices: it deletes them and tells every instance (this one included).
+            await lab.PublishAsync(LabTopology.DeviceInvalidKey, new DevicesInvalid(result.InvalidTokens, DateTimeOffset.UtcNow), ct);
+            log.LogInformation("Reported {Count} unregistered device token(s) to the lab service", result.InvalidTokens.Count);
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            log.LogWarning(ex, "Could not report {Count} unregistered device token(s) to the lab service", result.InvalidTokens.Count);
+        }
     }
 }

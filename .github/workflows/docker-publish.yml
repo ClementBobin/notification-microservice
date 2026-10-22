@@ -30,6 +30,8 @@ jobs:
             image: gateway
           - project: Genkan.Auth/Genkan.Auth.Api/Genkan.Auth.Api.csproj
             image: auth
+          - project: Genkan.Lab/Genkan.Lab.Api/Genkan.Lab.Api.csproj
+            image: lab
           - project: Genkan.Notification/Genkan.Notification.Api/Genkan.Notification.Api.csproj
             image: notification
           - project: Genkan.Migrator/Genkan.Migrator.csproj

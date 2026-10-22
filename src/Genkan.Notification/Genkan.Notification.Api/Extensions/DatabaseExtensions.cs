@@ -8,14 +8,11 @@ namespace Genkan.Notification.Api.Extensions;
 
 public static class DatabaseExtensions
 {
-    /// <summary>PostgreSQL context and the repositories built on it.</summary>
+    /// <summary>PostgreSQL context and the notification log repository (devices live in the lab service, see AddRabbitServices).</summary>
     public static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration config)
     {
         services.AddDbContext<NotificationDbContext>(o => o.UseNpgsql(config.GetConnectionString("Postgres")));
         services.AddScoped<INotificationRepository, NotificationRepository>();
-        services.AddScoped<IDeviceTokenRepository, DeviceTokenRepository>();
-        services.AddScoped<IDeviceGroupRepository, DeviceGroupRepository>();
-        services.AddScoped<ITopicSubscriptionRepository, TopicSubscriptionRepository>();
         return services;
     }
 }

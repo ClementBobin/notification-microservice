@@ -2,5 +2,7 @@
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.*" />
+    <!-- LabMessaging.cs: the RabbitMQ topology shared by the lab and notification services -->
+    <PackageReference Include="RabbitMQ.Client" Version="7.*" />
   </ItemGroup>
 </Project>

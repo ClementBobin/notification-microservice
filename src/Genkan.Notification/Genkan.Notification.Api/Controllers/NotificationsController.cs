@@ -10,8 +10,6 @@ namespace Genkan.Notification.Api.Controllers;
 [Route("notifications")]
 public sealed class NotificationsController(INotificationService svc) : ControllerBase
 {
-    private static readonly HashSet<string> Platforms = new(StringComparer.OrdinalIgnoreCase) { "android", "ios", "web" };
-
     private Guid CurrentUserId => User.GetUserId();
 
     // Notifications of the current user (own + broadcast alerts)
@@ -41,27 +39,5 @@ public sealed class NotificationsController(INotificationService svc) : Controll
             return BadRequest(new { error = "title_and_message_required" });
         var eventId = await svc.CreateAlertAsync(req.Title.Trim(), req.Message.Trim(), CurrentUserId, ct);
         return Accepted("/notifications/logs?type=alert.broadcast", new { eventId });
-    }
-
-    // The mobile app registers its FCM token after login (and whenever FCM rotates it)
-    [HttpPost("devices")]
-    [Authorize]
-    public async Task<IActionResult> RegisterDevice(RegisterDeviceRequest req, CancellationToken ct)
-    {
-        var token = req.Token.Trim();
-        if (token.Length is 0 or > 1024) return BadRequest(new { error = "invalid_token" });
-        if (!Platforms.Contains(req.Platform)) return BadRequest(new { error = "invalid_platform" });
-        await svc.RegisterDeviceAsync(CurrentUserId, token, req.Platform.ToLowerInvariant(), ct);
-        return NoContent();
-    }
-
-    // Call on logout so the device stops receiving notifications of this user
-    [HttpPost("devices/unregister")]
-    [Authorize]
-    public async Task<IActionResult> UnregisterDevice(UnregisterDeviceRequest req, CancellationToken ct)
-    {
-        var removed = await svc.UnregisterDeviceAsync(CurrentUserId, req.Token.Trim(), ct);
-        if (!removed) return NotFound();
-        return NoContent();
     }
 }

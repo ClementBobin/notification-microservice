@@ -31,6 +31,15 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
+  name: lab-config
+data:
+  ASPNETCORE_ENVIRONMENT: Production
+  ASPNETCORE_HTTP_PORTS: "8080"
+  RabbitMq__Host: rabbitmq
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
   name: notification-config
 data:
   ASPNETCORE_ENVIRONMENT: Production

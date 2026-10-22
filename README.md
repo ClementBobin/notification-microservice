@@ -2,11 +2,15 @@
 
 ```
 clients ──HTTP──▶ gateway ──▶ auth          (Redis sessions)
-                     └──────▶ notification
+                     ├──────▶ lab           (devices, device groups, topic subscriptions, push endpoints)
+                     └──────▶ notification  (notification log, FCM sender)
         both use the same PostgreSQL database, created and migrated by the one-shot `migrator` container
                                   ▲
         RabbitMQ topic exchange "workplace.events" ─ queue "notification-service"
         bindings: booking.#  access.#  visitor.#  alert.#   (dead-letter: workplace.events.dlx)
+
+lab ──▶ RabbitMQ exchange "genkan.lab" ──▶ notification     push commands, device events (see *Lab service*)
+lab ◀── RabbitMQ exchange "genkan.lab" ◀── notification     snapshot request, dead device tokens
 ```
 
 One PostgreSQL database, configured only by the connection string (no schema name is imposed). Only `Genkan.Migrator` creates or alters tables; the services just read and write them (see *Database*).
@@ -26,6 +30,11 @@ src/
     Genkan.Auth.Application/           Interfaces, Services (login, password hashing)
     Genkan.Auth.Domain/                Dto, Entities
     Genkan.Auth.Infrastructure/        Data (DbContext, Redis sessions), Interfaces, Repositories
+  Genkan.Lab/               Genkan.Lab.slnx
+    Genkan.Lab.Api/                    Controllers (devices, push), Extensions
+    Genkan.Lab.Application/            Services (device registration, one per kind of push, snapshot handler)
+    Genkan.Lab.Domain/                 Dto
+    Genkan.Lab.Infrastructure/         Data, Interfaces, Repositories, Messaging (RabbitMQ)
   Genkan.Notification/      Genkan.Notification.slnx
     Genkan.Notification.Api/           Controllers, Extensions (push wiring), ...
     Genkan.Notification.Application/   Interfaces, Services (processor, templates)
@@ -40,7 +49,7 @@ Everything may also use `Genkan.Shared`. Build one service on its own: `dotnet b
 
 ```bash
 cp .env.example .env        # then edit the secrets
-docker compose up -d --build postgres redis rabbitmq auth notification gateway   
+docker compose up -d --build postgres redis rabbitmq auth lab notification gateway
 ```
 
 Gateway: http://localhost:8080 · RabbitMQ UI: http://localhost:15672 · OpenAPI (inside the network): `/openapi/v1.json` on each service · Combined Swagger UI: http://localhost:8080/swagger when `SWAGGER_ENABLED=true` (see *Swagger*).
@@ -49,7 +58,7 @@ Gateway: http://localhost:8080 · RabbitMQ UI: http://localhost:15672 · OpenAPI
 
 | Method | Path | Access |
 |---|---|---|
-| GET | `/health`, `/auth/health`, `/notifications/health` | public |
+| GET | `/health`, `/auth/health`, `/lab/health`, `/notifications/health` | public |
 | POST | `/auth/login` `{email,password}` → `{token, expiresAt, user}` | public, 10/min/IP |
 | GET | `/auth/session` | bearer token |
 | POST | `/auth/logout` | bearer token |
@@ -58,16 +67,20 @@ Gateway: http://localhost:8080 · RabbitMQ UI: http://localhost:15672 · OpenAPI
 | GET | `/notifications/users/{userId}` | Admin |
 | GET | `/notifications/logs?userId=&type=&status=&page=&pageSize=` | Admin |
 | POST | `/notifications/alerts` `{title,message}` → publishes `alert.broadcast` | Admin |
-| POST | `/notifications/devices` `{token,platform}` (`android`\|`ios`\|`web`) → registers the device's FCM token | any user |
-| POST | `/notifications/devices/unregister` `{token}` (call on logout) | any user |
+| POST | `/lab/devices` `{token,platform}` (`android`\|`ios`\|`web`) → registers the device's FCM token | any user |
+| POST | `/lab/devices/unregister` `{token}` (call on logout) | any user |
 | GET | `/notifications/firebase-config` → `{apiKey, applicationId, messagingSenderId, projectId}` (public client identifiers, never the service-account key) | any user |
-| POST | `/notifications/push/individual` `{userId \| token, message}` | Admin |
-| POST | `/notifications/push/multicast` `{userIds, tokens, message}` | Admin |
-| GET | `/notifications/push/groups` | Admin |
-| PUT / DELETE | `/notifications/push/groups/{name}` (`{userIds}` replaces the members, an empty list deletes the group) | Admin |
-| POST | `/notifications/push/groups/{name}/send` `{title, body, data}` | Admin |
-| POST | `/notifications/push/topics/{topic}/send` `{title, body, data}` | Admin |
-| POST | `/notifications/push/topics/{topic}/subscribe` and `/unsubscribe` `{userIds}` | Admin |
+| POST | `/lab/push/individual` `{userId \| token, message}` | Admin |
+| POST | `/lab/push/multicast` `{userIds, tokens, message}` | Admin |
+| GET | `/lab/push/groups` | Admin |
+| PUT / DELETE | `/lab/push/groups/{name}` (`{userIds}` replaces the members, an empty list deletes the group) | Admin |
+| POST | `/lab/push/groups/{name}/send` `{title, body, data}` | Admin |
+| POST | `/lab/push/topics/{topic}/send` `{title, body, data}` | Admin |
+| POST | `/lab/push/topics/{topic}/subscribe` and `/unsubscribe` `{userIds}` | Admin |
+
+The `/lab/push/*` calls answer `202 Accepted` with `{commandId, targets}` once the push is handed to RabbitMQ (`404 no_registered_device` when there is
+nothing to send to, `503` when RabbitMQ is unreachable). The notification service sends it to FCM afterwards; look for the `commandId` in its logs.
+Subscribe / unsubscribe answer `200 {subscribedDevices | unsubscribedDevices}` (devices addressed).
 
 `message` is `{ "title": "...", "body": "...", "data": { "doorId": "102" } }` (data values are strings).
 
@@ -95,19 +108,37 @@ Sending it twice creates one notification (idempotent on eventId + user).
 
 The notification service consumes `booking.#`, `access.#`, `visitor.#` and `alert.#` from RabbitMQ, stores one notification per recipient
 and pushes it to the recipient's registered devices through Firebase Cloud Messaging (an alert with no recipients goes to every device).
-The app registers its FCM token with `POST /notifications/devices`.
+The app registers its FCM token with `POST /lab/devices` (see *Lab service*).
 
 Status of a stored notification: `Sent` (at least one device reached), `Skipped` (`no_registered_device`: still visible in `/notifications/me`), `Failed` (FCM error, see `error`).
-Tokens FCM reports as unregistered are deleted automatically.
+Tokens FCM reports as unregistered are reported to the lab service, which deletes them.
+
+### Lab service
+
+`lab` owns everything about devices: the tables `device_tokens`, `device_group_members` and `topic_subscriptions` (same PostgreSQL database, still created
+by `Genkan.Migrator`), the device endpoints and the four push endpoints. It never talks to Firebase and holds no Firebase credentials.
+`notification` never reads those tables; it learns about them over RabbitMQ (exchange `genkan.lab`, declared by both services through `LabTopology` in `Genkan.Shared`):
+
+| Direction | Routing key | Queue | Purpose |
+|---|---|---|---|
+| lab → notification | `push.send`, `push.topic-subscription` | `notification-push-commands` (durable, shared: one instance executes each command) | send a push / (un)subscribe tokens to a topic; lab has already resolved users and groups to tokens |
+| lab → notification | `device.registered`, `device.removed` | one private queue per notification instance | keep each instance's in-memory device cache current |
+| notification → lab | `snapshot.request` (RPC, `ReplyTo`) | `lab-service` (durable) | notification loads every device at startup, then again every `LabSync__SnapshotRefreshMinutes` (default 5) as a safety net |
+| notification → lab | `device.invalid` | `lab-service` | tokens FCM reported as unregistered; lab deletes them and publishes `device.removed` |
+
+Failed messages are retried once, then land in `genkan.lab.dead` (dead-letter exchange `genkan.lab.dlx`).
+The device cache keeps the lab timestamp of every change (plus short-lived tombstones for removals), so a snapshot and live events arriving in any order give the same result.
+Notification events (`booking.#`...) are only consumed once the first snapshot is loaded, so none is marked `no_registered_device` by mistake; they wait in the durable queue while lab is down.
+If a device event is lost (broker down), the cache is repaired by the next snapshot; a device registered during that window may miss a push at most that long.
 
 ### Four ways to send on demand (Admin)
 
 | Kind | Target | Implementation |
 |---|---|---|
-| Individual | one token, or one user's most recently used device | `IndividualPushService` -> `FcmIndividualPushSender` |
-| Multicast | an ad-hoc list of tokens and/or users | `MulticastPushService` -> `FcmMulticastPushSender` (500 per FCM request) |
-| Device group | a named group of users kept by this service | `DeviceGroupPushService` -> multicast |
-| Topic | an FCM topic | `TopicPushService` -> `FcmTopicPushSender` |
+| Individual | one token, or one user's most recently used device | lab `IndividualPushService` → command → notification `FcmIndividualPushSender` |
+| Multicast | an ad-hoc list of tokens and/or users | lab `MulticastPushService` → command → notification `FcmMulticastPushSender` (500 per FCM request) |
+| Device group | a named group of users kept by lab | lab `DeviceGroupPushService` → multicast command |
+| Topic | an FCM topic | lab `TopicPushService` → command → notification `FcmTopicPushSender` |
 
 Device groups are a mapping kept in our own database (`device_group_members`) and resolved to tokens at send time:
 FCM's native device groups are deprecated (decommissioned on 2027-09-29), and Firebase's migration guide recommends exactly this approach.
