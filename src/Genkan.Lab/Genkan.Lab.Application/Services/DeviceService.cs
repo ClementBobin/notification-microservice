@@ -21,13 +21,14 @@ public sealed class DeviceService(IDeviceTokenRepository devices, ITopicSubscrip
             var now = DateTimeOffset.UtcNow;
             await bus.PublishAsync(LabTopology.DeviceRegisteredKey, new DeviceRegistered(userId, token, platform, now), ct);
 
-            // FCM ties topic subscriptions to the token: ask for this one to be subscribed to the topics of its user.
-            foreach (var topic in await subscriptions.GetTopicsAsync(userId, ct))
+            // FCM ties topic subscriptions to the token, so every registration (first one, new login, rotated token) asks for it to be
+            // subscribed to the broadcast topic and to the topics of its user. Subscribing twice is harmless.
+            foreach (var topic in await TopicsOfAsync(userId, ct))
                 await bus.PublishAsync(LabTopology.TopicSubscriptionKey, new TopicSubscriptionCommand(Guid.NewGuid(), topic, [token], true, now), ct);
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            log.LogWarning(ex, "Device of user {UserId} saved but not announced on RabbitMQ", userId);
+            log.LogWarning(ex, "Device of user {UserId} saved but not announced on RabbitMQ (it is subscribed to the topics at its next registration)", userId);
         }
     }
 
@@ -38,7 +39,12 @@ public sealed class DeviceService(IDeviceTokenRepository devices, ITopicSubscrip
 
         try
         {
-            await bus.PublishAsync(LabTopology.DeviceRemovedKey, new DevicesRemoved([token], DateTimeOffset.UtcNow), ct);
+            var now = DateTimeOffset.UtcNow;
+            await bus.PublishAsync(LabTopology.DeviceRemovedKey, new DevicesRemoved([token], now), ct);
+
+            // After logout the device must stop receiving the broadcast and the topics of this user.
+            foreach (var topic in await TopicsOfAsync(userId, ct))
+                await bus.PublishAsync(LabTopology.TopicSubscriptionKey, new TopicSubscriptionCommand(Guid.NewGuid(), topic, [token], false, now), ct);
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
@@ -46,4 +52,8 @@ public sealed class DeviceService(IDeviceTokenRepository devices, ITopicSubscrip
         }
         return true;
     }
+
+    /// <summary>The broadcast topic plus the topics the user is subscribed to.</summary>
+    private async Task<IReadOnlyList<string>> TopicsOfAsync(Guid userId, CancellationToken ct) =>
+        (await subscriptions.GetTopicsAsync(userId, ct)).Append(PushTopics.Broadcast).Distinct().ToList();
 }
