@@ -40,4 +40,13 @@ public sealed class TopicPushController(ITopicPushService topics) : ControllerBa
         var result = await topics.UnsubscribeAsync(topic, request.UserIds, ct);
         return result.ToActionResult(this, "unsubscribedDevices");
     }
+
+    // Subscribes every device that is already registered to the broadcast topic. New devices are subscribed when they register;
+    // this is for the ones registered before that existed. Safe to call again: subscribing twice changes nothing.
+    [HttpPost("broadcast/sync")]
+    public async Task<IActionResult> SyncBroadcast(CancellationToken ct)
+    {
+        var result = await topics.SyncBroadcastAsync(ct);
+        return result.ToActionResult(this, "subscribedDevices");
+    }
 }

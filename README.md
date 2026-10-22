@@ -145,6 +145,15 @@ FCM's native device groups are deprecated (decommissioned on 2027-09-29), and Fi
 Topic subscriptions are stored per user (`topic_subscriptions`) and managed by an admin, so a device that registers a new token is
 re-subscribed to its user's topics. `FirebaseAdmin` must be >= 3.7.0 for topic management.
 
+### Broadcast topic
+
+Every device is subscribed to the FCM topic `broadcast` when its token is registered (`POST /lab/devices`, which the app calls after login and when FCM rotates
+the token), and unsubscribed from it, and from the topics of its user, when it is unregistered (logout). FCM creates a topic when its first device subscribes,
+so nothing has to be created beforehand. `POST /lab/push/topics/broadcast/send` then reaches everyone with a single request.
+Devices that registered before this existed are subscribed once with `POST /lab/push/topics/broadcast/sync` (Admin, safe to repeat).
+If the broker is down when a device registers, it is subscribed at its next registration (or by the sync call).
+The alerts consumed from RabbitMQ (`alert.broadcast`) still go to each token individually, so a device that missed its subscription never misses an alert.
+
 ### Firebase client config for the app
 
 `GET /notifications/firebase-config` returns the public identifiers the app needs to initialise Firebase at runtime
