@@ -32,4 +32,21 @@ public sealed class TopicPushService(ITopicSubscriptionRepository subscriptions,
             ? new PushDispatch(Guid.Empty, 0)
             : await PushCommands.SubscriptionAsync(bus, log, topic, tokens, false, ct);
     }
+
+    public async Task<PushDispatch> SyncBroadcastAsync(CancellationToken ct)
+    {
+        var tokens = (await devices.GetAllAsync(ct)).Select(d => d.Token).Distinct().ToList();
+        if (tokens.Count == 0) return new PushDispatch(Guid.Empty, 0);
+
+        // One command per 1000 tokens (the FCM limit per request): a single huge message would not fit in RabbitMQ.
+        var addressed = 0;
+        var last = new PushDispatch(Guid.Empty, 0);
+        foreach (var batch in tokens.Chunk(1000))
+        {
+            last = await PushCommands.SubscriptionAsync(bus, log, PushTopics.Broadcast, batch, true, ct);
+            if (last.Error is not null) return last;
+            addressed += batch.Length;
+        }
+        return new PushDispatch(last.CommandId, addressed);
+    }
 }
