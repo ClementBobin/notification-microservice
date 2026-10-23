@@ -2,7 +2,7 @@ using System.Text.Json;
 using Genkan.Notification.Application.Interfaces;
 using Genkan.Notification.Domain.Dto;
 using Genkan.Notification.Infrastructure.Interfaces;
-using Genkan.Shared;
+using Genkan.Shared.Messaging;
 using Genkan.Shared.Entities;
 
 namespace Genkan.Notification.Application.Services;

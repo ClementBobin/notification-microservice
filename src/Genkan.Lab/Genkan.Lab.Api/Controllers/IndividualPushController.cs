@@ -1,7 +1,8 @@
 using Genkan.Lab.Api.Extensions;
 using Genkan.Lab.Application.Interfaces;
 using Genkan.Lab.Domain.Dto;
-using Genkan.Shared;
+using Genkan.Shared.Auth;
+using Genkan.Shared.Controllers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

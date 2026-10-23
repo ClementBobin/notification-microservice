@@ -1,52 +1,6 @@
 using RabbitMQ.Client;
 
-namespace Genkan.Shared;
-
-// Messages exchanged between the lab and notification services over RabbitMQ (JSON, EventJson.Options).
-// Lab owns the devices, groups and topic subscriptions; notification never reads them from the database:
-// it executes the commands it receives and keeps an in-memory copy of the device tokens fed by the events below.
-
-/// <summary>What a push shows on the device (the wire counterpart of each service's own PushMessage model).</summary>
-public sealed record PushContent(string Title, string Body, IReadOnlyDictionary<string, string>? Data = null);
-
-public static class PushKinds
-{
-    /// <summary><see cref="PushCommand.Tokens"/> holds exactly one token.</summary>
-    public const string Individual = "individual";
-    /// <summary><see cref="PushCommand.Tokens"/> holds the tokens (already resolved from users / device groups by lab).</summary>
-    public const string Multicast = "multicast";
-    /// <summary><see cref="PushCommand.Topic"/> holds the FCM topic.</summary>
-    public const string Topic = "topic";
-}
-
-public static class PushTopics
-{
-    /// <summary>
-    /// Every registered device is subscribed to it by lab when its token is registered, so a push to everyone is one topic send.
-    /// FCM creates a topic when its first device subscribes: nothing has to be created beforehand.
-    /// </summary>
-    public const string Broadcast = "broadcast";
-}
-
-/// <summary>Lab -> notification: send this push. Lab has already resolved users and groups to device tokens.</summary>
-public sealed record PushCommand(Guid CommandId, string Kind, IReadOnlyList<string>? Tokens, string? Topic, PushContent Message, DateTimeOffset At);
-
-/// <summary>Lab -> notification: (un)subscribe these device tokens to an FCM topic.</summary>
-public sealed record TopicSubscriptionCommand(Guid CommandId, string Topic, IReadOnlyList<string> Tokens, bool Subscribe, DateTimeOffset At);
-
-/// <summary>Lab -> every notification instance: a device token was registered, or moved to another user. At is the lab clock.</summary>
-public sealed record DeviceRegistered(Guid UserId, string Token, string Platform, DateTimeOffset At);
-
-/// <summary>Lab -> every notification instance: these device tokens no longer exist. At is the lab clock.</summary>
-public sealed record DevicesRemoved(IReadOnlyList<string> Tokens, DateTimeOffset At);
-
-/// <summary>Notification -> lab: FCM reported these tokens as unregistered. Lab deletes them and announces DevicesRemoved.</summary>
-public sealed record DevicesInvalid(IReadOnlyList<string> Tokens, DateTimeOffset At);
-
-public sealed record DeviceSnapshotItem(Guid UserId, string Token, string Platform);
-
-/// <summary>Lab -> the notification instance that asked (RPC reply): every device as it was at GeneratedAt (lab clock).</summary>
-public sealed record DeviceSnapshot(DateTimeOffset GeneratedAt, IReadOnlyList<DeviceSnapshotItem> Devices);
+namespace Genkan.Shared.Messaging.Lab;
 
 /// <summary>
 /// RabbitMQ topology between lab and notification. One topic exchange:
@@ -56,6 +10,11 @@ public sealed record DeviceSnapshot(DateTimeOffset GeneratedAt, IReadOnlyList<De
 ///   * notification publishes DevicesInvalid and snapshot requests (RPC: ReplyTo + CorrelationId) to the lab queue.
 /// Both services call <see cref="DeclareAsync"/> before publishing or consuming, so the declarations always match.
 /// </summary>
+/// <remarks>
+/// Messages exchanged between the lab and notification services travel as JSON (<see cref="Genkan.Shared.Messaging.EventJson.Options"/>).
+/// Lab owns the devices, groups and topic subscriptions; notification never reads them from the database:
+/// it executes the commands it receives and keeps an in-memory copy of the device tokens fed by the events.
+/// </remarks>
 public static class LabTopology
 {
     public const string Exchange = "genkan.lab";

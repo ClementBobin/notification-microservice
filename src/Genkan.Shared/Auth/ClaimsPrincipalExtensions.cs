@@ -1,11 +1,8 @@
-namespace Api.Controllers;
-
 using System.Security.Claims;
 
-using Microsoft.AspNetCore.Mvc;
+namespace Genkan.Shared.Auth;
 
-[ApiController]
-public abstract class BaseController : ControllerBase
+public static class ClaimsPrincipalExtensions
 {
     /// <summary>The id of the authenticated user (X-User-Id set by the gateway).</summary>
     public static Guid GetUserId(this ClaimsPrincipal user) =>

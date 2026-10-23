@@ -1,7 +1,8 @@
 using Genkan.Lab.Api.Extensions;
 using Genkan.Lab.Application.Interfaces;
 using Genkan.Lab.Domain.Dto;
-using Genkan.Shared;
+using Genkan.Shared.Auth;
+using Genkan.Shared.Controllers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -39,14 +40,5 @@ public sealed class TopicPushController(ITopicPushService topics) : BaseControll
         if (!PushRules.IsValidTopic(topic)) return BadRequest(new { error = "invalid_topic" });
         var result = await topics.UnsubscribeAsync(topic, request.UserIds, ct);
         return result.ToActionResult(this, "unsubscribedDevices");
-    }
-
-    // Subscribes every device that is already registered to the broadcast topic. New devices are subscribed when they register;
-    // this is for the ones registered before that existed. Safe to call again: subscribing twice changes nothing.
-    [HttpPost("broadcast/sync")]
-    public async Task<IActionResult> SyncBroadcast(CancellationToken ct)
-    {
-        var result = await topics.SyncBroadcastAsync(ct);
-        return result.ToActionResult(this, "subscribedDevices");
     }
 }

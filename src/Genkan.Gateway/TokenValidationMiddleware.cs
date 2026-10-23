@@ -1,4 +1,4 @@
-using Genkan.Shared;
+using Genkan.Shared.Auth;
 
 namespace Genkan.Gateway;
 

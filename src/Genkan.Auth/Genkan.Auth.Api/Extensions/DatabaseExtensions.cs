@@ -2,7 +2,6 @@ using Genkan.Auth.Application.Interfaces;
 using Genkan.Auth.Infrastructure.Data;
 using Genkan.Auth.Infrastructure.Interfaces;
 using Genkan.Auth.Infrastructure.Repositories;
-using Genkan.Shared;
 using Microsoft.EntityFrameworkCore;
 
 namespace Genkan.Auth.Api.Extensions;

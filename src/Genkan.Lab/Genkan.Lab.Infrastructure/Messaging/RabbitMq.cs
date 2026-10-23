@@ -1,6 +1,7 @@
 using System.Text.Json;
 using Genkan.Lab.Infrastructure.Interfaces;
-using Genkan.Shared;
+using Genkan.Shared.Messaging;
+using Genkan.Shared.Messaging.Lab;
 using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 

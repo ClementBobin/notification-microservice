@@ -1,6 +1,6 @@
 using System.Text.Json;
 using Genkan.Notification.Infrastructure.Interfaces;
-using Genkan.Shared;
+using Genkan.Shared.Messaging;
 using Genkan.Shared.Entities;
 using Microsoft.Extensions.Logging;
 

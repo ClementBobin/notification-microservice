@@ -1,5 +1,5 @@
 using Genkan.Lab.Infrastructure.Interfaces;
-using Genkan.Shared;
+using Genkan.Shared.Messaging.Lab;
 
 namespace Genkan.Lab.Application.Services;
 

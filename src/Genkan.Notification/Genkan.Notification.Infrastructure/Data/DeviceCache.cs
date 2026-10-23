@@ -1,5 +1,5 @@
 using Genkan.Notification.Infrastructure.Interfaces;
-using Genkan.Shared;
+using Genkan.Shared.Messaging.Lab;
 
 namespace Genkan.Notification.Infrastructure.Data;
 

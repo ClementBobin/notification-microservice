@@ -1,6 +1,6 @@
 using Genkan.Lab.Infrastructure.Data;
 using Genkan.Lab.Infrastructure.Messaging;
-using Genkan.Shared;
+using Genkan.Shared.Health;
 using Microsoft.EntityFrameworkCore;
 
 namespace Genkan.Lab.Api.Extensions;

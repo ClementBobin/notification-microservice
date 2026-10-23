@@ -2,10 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
-namespace Genkan.Shared;
-
-/// <summary>One named dependency check of a service (database, redis, rabbitmq...).</summary>
-public sealed record HealthProbe(string Name, Func<IServiceProvider, CancellationToken, Task<bool>> Check);
+namespace Genkan.Shared.Health;
 
 public static class HealthEndpoints
 {

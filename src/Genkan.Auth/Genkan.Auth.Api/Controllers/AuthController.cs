@@ -1,6 +1,6 @@
 using Genkan.Auth.Application.Interfaces;
 using Genkan.Auth.Domain.Dto;
-using Genkan.Shared;
+using Genkan.Shared.Controllers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;

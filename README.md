@@ -23,7 +23,16 @@ Each service is its own solution made of four layered projects; the root `Genkan
 
 ```
 src/
-  Genkan.Shared/                       contracts, gateway header auth, DB bootstrap, service defaults (logging, API setup, middleware order), health endpoints
+  Genkan.Shared/                       one class per file, one folder per concern (namespace = folder):
+    Auth/                              Roles, GatewayHeaders, gateway header authentication, PasswordHasher, ClaimsPrincipal.GetUserId()
+    Configurations/                    EF Core mappings (IEntityTypeConfiguration<T>)
+    Controllers/                       BaseController
+    Entities/                          tables (User, DeviceToken, NotificationLog, ...)
+    Health/                            HealthProbe, MapServiceHealth
+    Hosting/                           service defaults (logging, API setup, middleware order)
+    Messaging/                         workplace event envelope + topology
+    Messaging/Lab/                     lab <-> notification RabbitMQ topology and messages
+    Middleware/                        correlation id
   Genkan.Gateway/                      YARP reverse proxy (single project)
   Genkan.Auth/              Genkan.Auth.slnx
     Genkan.Auth.Api/                   web api: Controllers, Configuration, Extensions, Interceptors, Middleware

@@ -1,5 +1,5 @@
 using Genkan.Migrator.Configuration;
-using Genkan.Shared;
+using Genkan.Shared.Auth;
 using Genkan.Shared.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

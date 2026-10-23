@@ -1,6 +1,6 @@
 using Genkan.Notification.Infrastructure.Data;
 using Genkan.Notification.Infrastructure.Messaging;
-using Genkan.Shared;
+using Genkan.Shared.Health;
 using Microsoft.EntityFrameworkCore;
 
 namespace Genkan.Notification.Api.Extensions;

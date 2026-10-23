@@ -1,6 +1,7 @@
 using System.Text.Json;
 using Genkan.Notification.Infrastructure.Interfaces;
-using Genkan.Shared;
+using Genkan.Shared.Messaging;
+using Genkan.Shared.Messaging.Lab;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 

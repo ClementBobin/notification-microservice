@@ -1,7 +1,8 @@
 using Genkan.Gateway;
 using Genkan.Gateway.RateLimiting;
 using Genkan.Gateway.Swagger;
-using Genkan.Shared;
+using Genkan.Shared.Hosting;
+using Genkan.Shared.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Logging.AddGenkanLogging();

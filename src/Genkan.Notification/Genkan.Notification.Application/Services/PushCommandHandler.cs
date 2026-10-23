@@ -1,6 +1,6 @@
 using Genkan.Notification.Domain.Dto;
 using Genkan.Notification.Infrastructure.Interfaces;
-using Genkan.Shared;
+using Genkan.Shared.Messaging.Lab;
 using Microsoft.Extensions.Logging;
 
 namespace Genkan.Notification.Application.Services;

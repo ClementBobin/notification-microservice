@@ -1,6 +1,6 @@
 using Genkan.Lab.Infrastructure.Data;
 using Genkan.Lab.Infrastructure.Interfaces;
-using Genkan.Shared;
+using Genkan.Shared.Messaging.Lab;
 using Genkan.Shared.Entities;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;

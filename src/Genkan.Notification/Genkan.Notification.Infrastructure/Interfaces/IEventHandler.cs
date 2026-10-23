@@ -1,4 +1,4 @@
-using Genkan.Shared;
+using Genkan.Shared.Messaging;
 
 namespace Genkan.Notification.Infrastructure.Interfaces;
 

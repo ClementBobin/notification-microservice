@@ -1,5 +1,5 @@
 using Genkan.Lab.Api.Extensions;
-using Genkan.Shared;
+using Genkan.Shared.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Logging.AddGenkanLogging();

@@ -1,7 +1,7 @@
 using Genkan.Lab.Application.Interfaces;
 using Genkan.Lab.Domain.Dto;
 using Genkan.Lab.Infrastructure.Interfaces;
-using Genkan.Shared;
+using Genkan.Shared.Messaging.Lab;
 using Microsoft.Extensions.Logging;
 
 namespace Genkan.Lab.Application.Services;

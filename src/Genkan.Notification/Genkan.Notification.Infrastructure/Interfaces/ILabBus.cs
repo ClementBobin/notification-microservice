@@ -7,5 +7,5 @@ public interface ILabBus
     Task PublishAsync<T>(string routingKey, T message, CancellationToken ct);
 
     /// <summary>Asks the lab service for every device and waits for the answer (RPC over a private reply queue). Throws on timeout.</summary>
-    Task<Genkan.Shared.DeviceSnapshot> RequestSnapshotAsync(TimeSpan timeout, CancellationToken ct);
+    Task<Genkan.Shared.Messaging.Lab.DeviceSnapshot> RequestSnapshotAsync(TimeSpan timeout, CancellationToken ct);
 }

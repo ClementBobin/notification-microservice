@@ -3,7 +3,7 @@ using Genkan.Notification.Domain.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using Genkan.Shared;
+using Genkan.Shared.Controllers;
 
 namespace Genkan.Notification.Api.Controllers;
 

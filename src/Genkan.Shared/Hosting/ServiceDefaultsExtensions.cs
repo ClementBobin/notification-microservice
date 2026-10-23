@@ -1,8 +1,10 @@
+using Genkan.Shared.Auth;
+using Genkan.Shared.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace Genkan.Shared;
+namespace Genkan.Shared.Hosting;
 
 public static class ServiceDefaultsExtensions
 {
