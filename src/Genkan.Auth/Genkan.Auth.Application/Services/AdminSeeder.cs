@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 
 namespace Genkan.Auth.Application.Services;
 
-public sealed class AdminSeeder(IUserRepository users, IAuthService auth, IOptions<SeedOptions> options, ILogger<AdminSeeder> log) : IAdminSeeder
+public sealed class AdminSeeder(IUserRepository users, IUserService userService, IOptions<SeedOptions> options, ILogger<AdminSeeder> log) : IAdminSeeder
 {
     public async Task SeedAsync(CancellationToken ct)
     {
@@ -14,7 +14,7 @@ public sealed class AdminSeeder(IUserRepository users, IAuthService auth, IOptio
         if (string.IsNullOrWhiteSpace(o.AdminEmail) || string.IsNullOrWhiteSpace(o.AdminPassword)) return;
         if (await users.AnyAsync(ct)) return;
 
-        var (_, error) = await auth.CreateUserAsync(o.AdminEmail, "Administrator", o.AdminPassword, Roles.Admin, ct);
+        var (_, error) = await userService.CreateUserAsync(o.AdminEmail, "Administrator", o.AdminPassword, Roles.Admin, ct);
         log.LogInformation("Seeded admin {Email}: {Result}", o.AdminEmail, error ?? "ok");
     }
 }

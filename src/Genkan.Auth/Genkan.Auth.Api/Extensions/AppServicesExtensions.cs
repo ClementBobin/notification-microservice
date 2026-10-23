@@ -12,6 +12,7 @@ public static class AppServicesExtensions
         services.Configure<SeedOptions>(config.GetSection("Seed"));
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IAdminSeeder, AdminSeeder>();
+        services.AddScoped<IUserService, UserService>();
         return services;
     }
 }

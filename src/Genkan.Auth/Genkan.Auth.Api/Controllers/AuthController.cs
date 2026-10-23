@@ -45,14 +45,4 @@ public sealed class AuthController(IAuthService auth) : ControllerBase
         if (token is not null) await auth.LogoutAsync(token);
         return NoContent();
     }
-
-    // Admin only
-    [HttpPost("users")]
-    [Authorize(Roles = Roles.Admin)]
-    public async Task<IActionResult> CreateUser(CreateUserRequest req, CancellationToken ct)
-    {
-        var (user, error) = await auth.CreateUserAsync(req.Email, req.DisplayName, req.Password, req.Role, ct);
-        if (error is null) return Created($"/auth/users/{user!.Id}", user);
-        return StatusCode(error == "email_taken" ? 409 : 400, new { error });
-    }
 }

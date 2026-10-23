@@ -7,5 +7,6 @@ public class User
     public string DisplayName { get; set; } = "";
     public string PasswordHash { get; set; } = "";
     public string Role { get; set; } = "User";
+    public string? FcmToken { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
 }
