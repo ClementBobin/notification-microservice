@@ -1,7 +1,0 @@
-<Solution>
-  <Project Path="Genkan.Lab.Domain/Genkan.Lab.Domain.csproj" />
-  <Project Path="Genkan.Lab.Infrastructure/Genkan.Lab.Infrastructure.csproj" />
-  <Project Path="Genkan.Lab.Application/Genkan.Lab.Application.csproj" />
-  <Project Path="Genkan.Lab.Api/Genkan.Lab.Api.csproj" />
-  <Project Path="../Genkan.Shared/Genkan.Shared.csproj" />
-</Solution>

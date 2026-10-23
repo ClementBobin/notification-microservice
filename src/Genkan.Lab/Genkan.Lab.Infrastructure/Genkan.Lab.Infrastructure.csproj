@@ -1,9 +1,0 @@
-<Project Sdk="Microsoft.NET.Sdk">
-  <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.*" />
-    <PackageReference Include="RabbitMQ.Client" Version="7.*" />
-    <ProjectReference Include="..\Genkan.Lab.Domain\Genkan.Lab.Domain.csproj" />
-    <ProjectReference Include="..\..\Genkan.Shared\Genkan.Shared.csproj" />
-  </ItemGroup>
-</Project>
