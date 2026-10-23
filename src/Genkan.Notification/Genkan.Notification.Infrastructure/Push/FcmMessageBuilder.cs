@@ -13,9 +13,6 @@ internal static class FcmMessageBuilder
 
     private static AndroidConfig HighPriority() => new() { Priority = Priority.High };
 
-    public static Message ForToken(string token, PushMessage m) =>
-        new() { Token = token, Notification = ToNotification(m), Data = ToData(m), Android = HighPriority() };
-
     public static Message ForTopic(string topic, PushMessage m) =>
         new() { Topic = topic, Notification = ToNotification(m), Data = ToData(m), Android = HighPriority() };
 

@@ -5,14 +5,8 @@ using Microsoft.Extensions.Logging;
 namespace Genkan.Notification.Infrastructure.Push;
 
 /// <summary>Used when Firebase:Enabled is false (local development): logs every push instead of sending it.</summary>
-public sealed class LoggingPushChannel(ILogger<LoggingPushChannel> log) : IIndividualPushSender, IMulticastPushSender, ITopicPushSender
+public sealed class LoggingPushChannel(ILogger<LoggingPushChannel> log) : IMulticastPushSender, ITopicPushSender
 {
-    Task<PushResult> IIndividualPushSender.SendAsync(string token, PushMessage message, CancellationToken ct)
-    {
-        log.LogInformation("PUSH individual: {Title} - {Body}", message.Title, message.Body);
-        return Task.FromResult(new PushResult(1, 0, []));
-    }
-
     Task<PushResult> IMulticastPushSender.SendAsync(IReadOnlyList<string> tokens, PushMessage message, CancellationToken ct)
     {
         log.LogInformation("PUSH multicast to {Count} device(s): {Title} - {Body}", tokens.Count, message.Title, message.Body);

@@ -29,20 +29,16 @@ public static class PushExtensions
                 });
                 return FirebaseMessaging.GetMessaging(app);
             });
-            services.AddSingleton<IIndividualPushSender, FcmIndividualPushSender>();
             services.AddSingleton<IMulticastPushSender, FcmMulticastPushSender>();
             services.AddSingleton<ITopicPushSender, FcmTopicPushSender>();
         }
         else
         {
             services.AddSingleton<LoggingPushChannel>();
-            services.AddSingleton<IIndividualPushSender>(sp => sp.GetRequiredService<LoggingPushChannel>());
             services.AddSingleton<IMulticastPushSender>(sp => sp.GetRequiredService<LoggingPushChannel>());
             services.AddSingleton<ITopicPushSender>(sp => sp.GetRequiredService<LoggingPushChannel>());
         }
 
-        // Push used for the events consumed from RabbitMQ
-        services.AddScoped<IPushSender, NotificationPushSender>();
         return services;
     }
 

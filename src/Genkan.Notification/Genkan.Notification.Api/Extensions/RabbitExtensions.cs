@@ -13,13 +13,8 @@ public static class RabbitExtensions
     public static IServiceCollection AddRabbitServices(this IServiceCollection services, IConfiguration config)
     {
         services.Configure<RabbitOptions>(config.GetSection("RabbitMq"));
-        services.Configure<LabSyncOptions>(config.GetSection("LabSync"));
         services.AddSingleton<RabbitMqConnection>();
         services.AddSingleton<IEventPublisher, RabbitMqEventPublisher>();
-        services.AddSingleton<IDeviceCache, DeviceCache>();
-        services.AddSingleton<ILabBus, RabbitMqLabBus>();
-        services.AddHostedService<DeviceSyncService>();
-        services.AddHostedService<PushCommandConsumer>();
         services.AddHostedService<EventConsumer>();
         return services;
     }

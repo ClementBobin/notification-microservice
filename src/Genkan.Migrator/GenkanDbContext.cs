@@ -10,6 +10,7 @@ namespace Genkan.Migrator;
 public sealed class GenkanDbContext(DbContextOptions<GenkanDbContext> options) : DbContext(options)
 {
     public DbSet<User> Users => Set<User>();
+    public DbSet<NotificationLog> Notifications => Set<NotificationLog>();
 
     /// <summary>Single place where the context is configured (runtime and design time).</summary>
     public static void Configure(DbContextOptionsBuilder options, string? connectionString) =>

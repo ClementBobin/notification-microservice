@@ -8,9 +8,9 @@ namespace Genkan.Notification.Application.Services;
 
 /// <summary>
 /// Handles every event received from RabbitMQ: builds the notification, stores it (idempotent per event + recipient)
-/// and pushes it through <see cref="IPushSender"/> (Firebase Cloud Messaging in production).
+/// and pushes it through <see cref="IMulticastPushSender"/> (Firebase Cloud Messaging in production).
 /// </summary>
-public sealed class NotificationProcessor(INotificationRepository repo, IPushSender push, ILogger<NotificationProcessor> log) : IEventHandler
+public sealed class NotificationProcessor(INotificationRepository repo, IMulticastPushSender push, ILogger<NotificationProcessor> log) : IEventHandler
 {
     public Task HandleAsync(EventEnvelope e, CancellationToken ct) => ProcessAsync(e, ct);
 

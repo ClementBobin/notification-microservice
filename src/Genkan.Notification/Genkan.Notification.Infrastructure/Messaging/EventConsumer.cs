@@ -10,15 +10,10 @@ using RabbitMQ.Client.Events;
 namespace Genkan.Notification.Infrastructure.Messaging;
 
 /// <summary>Consumes booking.#, access.#, visitor.# (and alert.#) from the durable queue and hands each event to <see cref="IEventHandler"/>.</summary>
-public sealed class EventConsumer(RabbitMqConnection connection, IServiceScopeFactory scopes, IDeviceCache devices, ILogger<EventConsumer> log) : BackgroundService
+public sealed class EventConsumer(RabbitMqConnection connection, IServiceScopeFactory scopes, IIEventHandler handler, ILogger<EventConsumer> log) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken ct)
     {
-        // Events are durable and wait in the queue. Consuming before the devices are known would mark every notification "no_registered_device".
-        if (!devices.IsReady) log.LogInformation("Waiting for the device list from the lab service before consuming events");
-        try { await devices.WaitUntilReadyAsync(ct); }
-        catch (OperationCanceledException) { return; }
-
         IChannel? channel = null;
         while (!ct.IsCancellationRequested && channel is null)
         {
