@@ -1,5 +1,6 @@
 namespace Genkan.Shared.Messaging.Lab;
 
+/// <summary>Names of the FCM topics the platform uses.</summary>
 public static class PushTopics
 {
     /// <summary>

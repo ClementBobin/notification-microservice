@@ -11,7 +11,6 @@ public static class RabbitExtensions
         services.Configure<RabbitOptions>(config.GetSection("RabbitMq"));
         services.AddSingleton<RabbitMqConnection>();
         services.AddSingleton<IMessageBus, RabbitMqMessageBus>();
-        services.AddHostedService<LabConsumer>();
         return services;
     }
 }
