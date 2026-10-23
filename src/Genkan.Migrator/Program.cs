@@ -41,7 +41,7 @@ for (var attempt = 1; ; attempt++)
         log.LogInformation("Database is up to date");
         return 0;
     }
-    catch (Exception ex) when (attempt < 30 && ex is not InvalidOperationException)
+    catch (Exception ex) when (attempt < 30 && IsTransient(ex))
     {
         log.LogWarning("Database not ready ({Message}), retry {Attempt}/30", ex.Message, attempt);
         await Task.Delay(TimeSpan.FromSeconds(2));
@@ -51,4 +51,7 @@ for (var attempt = 1; ; attempt++)
         log.LogError(ex, "Migration failed");
         return 1;
     }
+
+    static bool IsTransient(Exception? ex) =>
+        ex is not null && (ex is NpgsqlException or TimeoutException || IsTransient(ex.InnerException));
 }

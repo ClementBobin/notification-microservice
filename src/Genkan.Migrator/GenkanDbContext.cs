@@ -1,5 +1,4 @@
 using Genkan.Shared.Entities;
-using Genkan.Shared.Configurations;
 using Microsoft.EntityFrameworkCore;
 
 namespace Genkan.Migrator;
@@ -10,23 +9,9 @@ namespace Genkan.Migrator;
 /// </summary>
 public sealed class GenkanDbContext(DbContextOptions<GenkanDbContext> options) : DbContext(options)
 {
+    public DbSet<User> Users => Set<User>();
+
     /// <summary>Single place where the context is configured (runtime and design time).</summary>
     public static void Configure(DbContextOptionsBuilder options, string? connectionString) =>
         options.UseNpgsql(connectionString); // no schema imposed: tables and __EFMigrationsHistory go where the connection string points (Search Path, default "public")
-
-    protected override void OnModelCreating(ModelBuilder b)
-    {
-        b.ApplyConfiguration(new UserConfiguration());
-        b.ApplyConfiguration(new NotificationLogConfiguration());
-        b.ApplyConfiguration(new DeviceTokenConfiguration());
-        b.ApplyConfiguration(new DeviceGroupMemberConfiguration());
-        b.ApplyConfiguration(new TopicSubscriptionConfiguration());
-
-        // Cross-service foreign keys: removing a user removes their devices, group memberships and topic subscriptions.
-        // The services' own contexts do not know these relationships; the database enforces them.
-        b.Entity<DeviceToken>().HasOne<User>().WithMany().HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
-        b.Entity<DeviceGroupMember>().HasOne<User>().WithMany().HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
-        b.Entity<TopicSubscription>().HasOne<User>().WithMany().HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
-        // NotificationLog.RecipientUserId has no FK on purpose: Guid.Empty means "broadcast" and the log must outlive users.
-    }
 }
