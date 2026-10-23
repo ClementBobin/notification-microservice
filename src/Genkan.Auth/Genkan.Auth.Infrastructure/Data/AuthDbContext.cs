@@ -1,5 +1,4 @@
 using Genkan.Shared.Entities;
-using Genkan.Shared.Configurations;
 using Microsoft.EntityFrameworkCore;
 
 namespace Genkan.Auth.Infrastructure.Data;
@@ -8,9 +7,4 @@ namespace Genkan.Auth.Infrastructure.Data;
 public class AuthDbContext(DbContextOptions<AuthDbContext> options) : DbContext(options)
 {
     public DbSet<User> Users => Set<User>();
-
-    protected override void OnModelCreating(ModelBuilder b)
-    {
-        b.ApplyConfiguration(new UserConfiguration());
-    }
 }
