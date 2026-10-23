@@ -9,7 +9,7 @@ namespace Genkan.Lab.Api.Controllers;
 [ApiController]
 [Route("lab/devices")]
 [Authorize]
-public sealed class DevicesController(IDeviceService devices) : ControllerBase
+public sealed class DevicesController(IDeviceService devices) : BaseController
 {
     private static readonly HashSet<string> Platforms = new(StringComparer.OrdinalIgnoreCase) { "android", "ios", "web" };
 

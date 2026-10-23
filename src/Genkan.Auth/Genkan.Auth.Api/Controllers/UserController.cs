@@ -9,7 +9,7 @@ namespace Genkan.Auth.Api.Controllers;
 
 [ApiController]
 [Route("user")]
-public sealed class UserController(IUserService service) : ControllerBase
+public sealed class UserController(IUserService service) : BaseController
 {
     // Admin only
     [HttpPost("users")]

@@ -10,7 +10,7 @@ namespace Genkan.Lab.Api.Controllers;
 [ApiController]
 [Route("lab/push/individual")]
 [Authorize(Roles = Roles.Admin)]
-public sealed class IndividualPushController(IIndividualPushService push) : ControllerBase
+public sealed class IndividualPushController(IIndividualPushService push) : BaseController
 {
     // { "userId": "...", "message": { "title": "...", "body": "...", "data": { "doorId": "102" } } }  or  { "token": "..." }
     [HttpPost]

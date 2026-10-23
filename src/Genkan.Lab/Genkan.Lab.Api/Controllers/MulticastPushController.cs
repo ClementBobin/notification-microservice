@@ -10,7 +10,7 @@ namespace Genkan.Lab.Api.Controllers;
 [ApiController]
 [Route("lab/push/multicast")]
 [Authorize(Roles = Roles.Admin)]
-public sealed class MulticastPushController(IMulticastPushService push) : ControllerBase
+public sealed class MulticastPushController(IMulticastPushService push) : BaseController
 {
     // { "userIds": ["..."], "tokens": ["..."], "message": { "title": "...", "body": "..." } }
     [HttpPost]

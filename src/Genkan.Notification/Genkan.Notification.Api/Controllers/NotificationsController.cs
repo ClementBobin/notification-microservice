@@ -3,13 +3,15 @@ using Genkan.Notification.Domain.Dto;
 using Genkan.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Genkan.Shared;
 
 namespace Genkan.Notification.Api.Controllers;
 
 [ApiController]
 [Route("notifications")]
-public sealed class NotificationsController(INotificationService svc) : ControllerBase
+public sealed class NotificationsController(INotificationService svc) : BaseController
 {
+    /// <summary>The id of the current user.</summary>
     private Guid CurrentUserId => User.GetUserId();
 
     // Notifications of the current user (own + broadcast alerts)

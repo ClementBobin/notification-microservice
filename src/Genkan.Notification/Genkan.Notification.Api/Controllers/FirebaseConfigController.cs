@@ -3,12 +3,13 @@ using Genkan.Notification.Domain.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Genkan.Shared;
 
 namespace Genkan.Notification.Api.Controllers;
 
 [ApiController]
 [Route("notifications/firebase-config")]
-public sealed class FirebaseConfigController(IOptions<FirebaseClientOptions> options) : ControllerBase
+public sealed class FirebaseConfigController(IOptions<FirebaseClientOptions> options) : BaseController
 {
     // What the app needs to call FirebaseApp.initializeApp(...) at runtime and obtain its FCM token.
     // Public identifiers only; the service-account JSON (private key) is never exposed.

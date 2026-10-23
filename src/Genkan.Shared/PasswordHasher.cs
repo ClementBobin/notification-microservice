@@ -1,6 +1,6 @@
 using System.Security.Cryptography;
 
-namespace Genkan.Auth.Application.Services;
+namespace Genkan.Shared;
 
 /// <summary>PBKDF2-SHA256, versioned format "v1.iterations.salt.hash" so the cost can be raised later.</summary>
 public static class PasswordHasher

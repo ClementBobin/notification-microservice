@@ -10,7 +10,7 @@ namespace Genkan.Lab.Api.Controllers;
 [ApiController]
 [Route("lab/push/groups")]
 [Authorize(Roles = Roles.Admin)]
-public sealed class DeviceGroupPushController(IDeviceGroupPushService groups) : ControllerBase
+public sealed class DeviceGroupPushController(IDeviceGroupPushService groups) : BaseController
 {
     [HttpGet]
     public Task<IReadOnlyList<DeviceGroupDto>> List(CancellationToken ct) => groups.ListAsync(ct);

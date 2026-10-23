@@ -9,7 +9,7 @@ namespace Genkan.Auth.Api.Controllers;
 
 [ApiController]
 [Route("auth")]
-public sealed class AuthController(IAuthService auth) : ControllerBase
+public sealed class AuthController(IAuthService auth) : BaseController
 {
     private string? Bearer()
     {

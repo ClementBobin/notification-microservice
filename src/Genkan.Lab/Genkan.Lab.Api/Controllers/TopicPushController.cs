@@ -11,7 +11,7 @@ namespace Genkan.Lab.Api.Controllers;
 [ApiController]
 [Route("lab/push/topics")]
 [Authorize(Roles = Roles.Admin)]
-public sealed class TopicPushController(ITopicPushService topics) : ControllerBase
+public sealed class TopicPushController(ITopicPushService topics) : BaseController
 {
     // { "title": "...", "body": "...", "data": { } }
     [HttpPost("{topic}/send")]
