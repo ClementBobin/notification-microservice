@@ -15,12 +15,6 @@ if (string.IsNullOrWhiteSpace(connectionString))
     return 1;
 }
 
-// No schema name is imposed: tables go where the connection string points ("Search Path=app" -> schema "app", default "public").
-// PostgreSQL does not create a schema by itself, so create the first schema of the Search Path when one is given.
-var firstSchema = new NpgsqlConnectionStringBuilder(connectionString).SearchPath?.Split(',')[0].Trim().Trim('"');
-if (string.IsNullOrEmpty(firstSchema) || firstSchema.StartsWith('$') || firstSchema.Equals("public", StringComparison.OrdinalIgnoreCase))
-    firstSchema = null;
-
 var options = new DbContextOptionsBuilder<GenkanDbContext>();
 GenkanDbContext.Configure(options, connectionString);
 await using var db = new GenkanDbContext(options.Options);
@@ -33,13 +27,8 @@ for (var attempt = 1; ; attempt++)
 {
     try
     {
-        if (firstSchema is not null)
-            await db.Database.ExecuteSqlRawAsync($"CREATE SCHEMA IF NOT EXISTS \"{firstSchema.Replace("\"", "\"\"")}\"");
-
         if (hasMigrations)
             await db.Database.MigrateAsync();
-        else if (!await db.Database.SqlQueryRaw<bool>("SELECT to_regclass('users') IS NOT NULL AS \"Value\"").SingleAsync())
-            await db.GetService<IRelationalDatabaseCreator>().CreateTablesAsync();
 
         log.LogInformation("Database is up to date");
         return 0;
