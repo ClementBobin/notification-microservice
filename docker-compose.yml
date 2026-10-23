@@ -73,7 +73,7 @@ services:
     logging: *logging
 
   # Owns the database structure: applies the EF Core migrations, then exits (restart: "no").
-  # auth, lab and notification only start after it completed successfully.
+  # auth and notification only start after it completed successfully.
   migrator:
     image: ghcr.io/clementbobin/notification-microservice/migrator:latest
     restart: "no"
@@ -95,29 +95,6 @@ services:
       migrator:
         condition: service_completed_successfully
       redis:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD", "curl", "-fsS", "http://localhost:8080/health"]
-      interval: 10s
-      timeout: 3s
-      retries: 10
-      start_period: 15s
-    logging: *logging
-
-  # Owns devices, device groups and topic subscriptions (device_tokens, device_group_members, topic_subscriptions) and the
-  # push endpoints. It tells the notification service what to send over RabbitMQ; the notification service sends the pushes.
-  lab:
-    image: ghcr.io/clementbobin/notification-microservice/lab:latest
-    restart: unless-stopped
-    environment:
-      <<: [*service-env, *db-env]
-      RabbitMq__Host: rabbitmq
-      RabbitMq__User: ${RABBITMQ_USER}
-      RabbitMq__Password: ${RABBITMQ_PASSWORD}
-    depends_on:
-      migrator:
-        condition: service_completed_successfully
-      rabbitmq:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-fsS", "http://localhost:8080/health"]
@@ -152,8 +129,6 @@ services:
         condition: service_completed_successfully
       rabbitmq:
         condition: service_healthy
-      lab:
-        condition: service_healthy   # the device list comes from lab over RabbitMQ
     healthcheck:
       test: ["CMD", "curl", "-fsS", "http://localhost:8080/health"]
       interval: 10s
@@ -168,7 +143,7 @@ services:
     environment:
       <<: [*service-env, *redis-env]
       Services__AuthUrl: http://auth:8080
-      Swagger__Enabled: ${SWAGGER_ENABLED:-false}   # true = combined Swagger UI of auth + lab + notification on /swagger (keep false in production)
+      Swagger__Enabled: ${SWAGGER_ENABLED:-false}   # true = combined Swagger UI of auth + notification on /swagger (keep false in production)
       RateLimiting__Store: ${RATE_LIMIT_STORE:-Redis}   # Memory | Redis (Redis = counters shared by every gateway instance)
       RateLimiting__Enabled: ${RATE_LIMIT_ENABLED:-true}
       RateLimiting__Policies__user__Key: ${RATE_LIMIT_USER_KEY:-user}   # the key used to identify a user (e.g. "user" = X-User-Id header, "ip" = client IP)
@@ -177,8 +152,6 @@ services:
       RateLimiting__Policies__user__RefillPeriodSeconds: ${RATE_LIMIT_USER_REFILL_PERIOD_SECONDS:-60}
     depends_on:
       auth:
-        condition: service_healthy
-      lab:
         condition: service_healthy
       notification:
         condition: service_healthy
