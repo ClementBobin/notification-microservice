@@ -31,15 +31,4 @@ public sealed class NotificationsController(INotificationService svc) : BaseCont
     [Authorize(Roles = Roles.Admin)]
     public Task<PagedResult<NotificationDto>> UserLogs(Guid userId, string? status, int? page, int? pageSize, CancellationToken ct) =>
         svc.GetLogsAsync(userId, true, null, status, page, pageSize, ct);
-
-    // Admin: alert to everyone
-    [HttpPost("alerts")]
-    [Authorize(Roles = Roles.Admin)]
-    public async Task<IActionResult> CreateAlert(CreateAlertRequest req, CancellationToken ct)
-    {
-        if (string.IsNullOrWhiteSpace(req.Title) || string.IsNullOrWhiteSpace(req.Message))
-            return BadRequest(new { error = "title_and_message_required" });
-        var eventId = await svc.CreateAlertAsync(req.Title.Trim(), req.Message.Trim(), CurrentUserId, ct);
-        return Accepted("/notifications/logs?type=alert.broadcast", new { eventId });
-    }
 }
