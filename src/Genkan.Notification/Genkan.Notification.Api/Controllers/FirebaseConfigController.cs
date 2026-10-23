@@ -1,4 +1,4 @@
-using Genkan.Notification.Api.Configuration;
+using Genkan.Notification.Domain.Configuration;
 using Genkan.Notification.Domain.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

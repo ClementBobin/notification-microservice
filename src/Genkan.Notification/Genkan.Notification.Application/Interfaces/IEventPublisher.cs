@@ -1,6 +1,6 @@
 using Genkan.Shared.Messaging;
 
-namespace Genkan.Notification.Infrastructure.Interfaces;
+namespace Genkan.Notification.Application.Interfaces;
 
 public interface IEventPublisher
 {

@@ -1,6 +1,6 @@
 using Genkan.Shared.Messaging.Lab;
 
-namespace Genkan.Notification.Infrastructure.Interfaces;
+namespace Genkan.Notification.Application.Interfaces;
 
 /// <summary>Implemented by the application layer; the RabbitMQ consumer hands every command received from the lab service to it.</summary>
 public interface IPushCommandHandler

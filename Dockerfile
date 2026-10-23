@@ -22,7 +22,9 @@ COPY src/Genkan.Lab/Genkan.Lab.Api/Genkan.Lab.Api.csproj src/Genkan.Lab/Genkan.L
 
 COPY src/Genkan.Notification/Genkan.Notification.Domain/Genkan.Notification.Domain.csproj src/Genkan.Notification/Genkan.Notification.Domain/
 COPY src/Genkan.Notification/Genkan.Notification.Infrastructure/Genkan.Notification.Infrastructure.csproj src/Genkan.Notification/Genkan.Notification.Infrastructure/
+COPY src/Genkan.Notification/Genkan.Notification.Firebase/Genkan.Notification.Firebase.csproj src/Genkan.Notification/Genkan.Notification.Firebase/
 COPY src/Genkan.Notification/Genkan.Notification.Application/Genkan.Notification.Application.csproj src/Genkan.Notification/Genkan.Notification.Application/
+COPY src/Genkan.Notification/Genkan.Notification.Rabbit/Genkan.Notification.Rabbit.csproj src/Genkan.Notification/Genkan.Notification.Rabbit/
 COPY src/Genkan.Notification/Genkan.Notification.Api/Genkan.Notification.Api.csproj src/Genkan.Notification/Genkan.Notification.Api/
 
 # 3. Restore the entire solution

@@ -1,5 +1,6 @@
 using Genkan.Notification.Domain.Dto;
-using Genkan.Notification.Infrastructure.Interfaces;
+using Genkan.Notification.Application.Interfaces;
+using Genkan.Notification.Firebase.Interfaces;
 using Genkan.Shared.Messaging.Lab;
 using Microsoft.Extensions.Logging;
 

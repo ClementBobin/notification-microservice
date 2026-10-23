@@ -13,7 +13,9 @@
   <Folder Name="/src/Notification/">
     <Project Path="src/Genkan.Notification/Genkan.Notification.Domain/Genkan.Notification.Domain.csproj" />
     <Project Path="src/Genkan.Notification/Genkan.Notification.Infrastructure/Genkan.Notification.Infrastructure.csproj" />
+    <Project Path="src/Genkan.Notification/Genkan.Notification.Firebase/Genkan.Notification.Firebase.csproj" />
     <Project Path="src/Genkan.Notification/Genkan.Notification.Application/Genkan.Notification.Application.csproj" />
+    <Project Path="src/Genkan.Notification/Genkan.Notification.Rabbit/Genkan.Notification.Rabbit.csproj" />
     <Project Path="src/Genkan.Notification/Genkan.Notification.Api/Genkan.Notification.Api.csproj" />
   </Folder>
 </Solution>

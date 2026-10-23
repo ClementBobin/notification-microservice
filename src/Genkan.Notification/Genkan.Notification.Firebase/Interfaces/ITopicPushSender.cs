@@ -1,6 +1,6 @@
 using Genkan.Notification.Domain.Dto;
 
-namespace Genkan.Notification.Infrastructure.Interfaces;
+namespace Genkan.Notification.Firebase.Interfaces;
 
 public interface ITopicPushSender
 {

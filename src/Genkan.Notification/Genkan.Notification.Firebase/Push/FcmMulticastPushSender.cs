@@ -1,8 +1,8 @@
 using FirebaseAdmin.Messaging;
 using Genkan.Notification.Domain.Dto;
-using Genkan.Notification.Infrastructure.Interfaces;
+using Genkan.Notification.Firebase.Interfaces;
 
-namespace Genkan.Notification.Infrastructure.Push;
+namespace Genkan.Notification.Firebase.Push;
 
 /// <summary>Multicast notification: one message to many registration tokens, 500 per FCM request. Also serves device groups.</summary>
 public sealed class FcmMulticastPushSender(FirebaseMessaging fcm) : IMulticastPushSender

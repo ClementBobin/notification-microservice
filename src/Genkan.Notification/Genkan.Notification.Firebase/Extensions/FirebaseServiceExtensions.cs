@@ -1,20 +1,22 @@
 using FirebaseAdmin;
 using FirebaseAdmin.Messaging;
-using Genkan.Notification.Api.Configuration;
-using Genkan.Notification.Infrastructure.Interfaces;
-using Genkan.Notification.Infrastructure.Push;
+using Genkan.Notification.Domain.Configuration;
+using Genkan.Notification.Firebase.Interfaces;
+using Genkan.Notification.Firebase.Push;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace Genkan.Notification.Api.Extensions;
+namespace Genkan.Notification.Firebase.Extensions;
 
-public static class PushExtensions
+public static class FirebaseServiceExtensions
 {
     /// <summary>
-    /// Firebase:Enabled=true  -> the individual / multicast / topic senders talk to FCM. Credentials come from Application Default
+    /// Firebase:Enabled=true  -> the multicast / topic senders talk to FCM. Credentials come from Application Default
     ///                           Credentials, i.e. the GOOGLE_APPLICATION_CREDENTIALS env var pointing at a service-account JSON file.
     /// Firebase:Enabled=false -> the same interfaces are served by a channel that only logs (local development).
     /// Also binds the public client identifiers served by GET /notifications/firebase-config.
     /// </summary>
-    public static IServiceCollection AddPushSender(this IServiceCollection services, IConfiguration config)
+    public static IServiceCollection AddNotificationFirebase(this IServiceCollection services, IConfiguration config)
     {
         services.Configure<FirebaseClientOptions>(config.GetSection("Firebase:Client"));
 
@@ -31,6 +33,7 @@ public static class PushExtensions
             });
             services.AddSingleton<IMulticastPushSender, FcmMulticastPushSender>();
             services.AddSingleton<ITopicPushSender, FcmTopicPushSender>();
+            services.AddHostedService<FirebaseStartupValidator>();
         }
         else
         {
@@ -40,16 +43,5 @@ public static class PushExtensions
         }
 
         return services;
-    }
-
-    /// <summary>
-    /// Fails at startup when Firebase is enabled but the credentials are missing or invalid,
-    /// instead of dead-lettering every RabbitMQ event later.
-    /// </summary>
-    public static WebApplication ValidatePushConfiguration(this WebApplication app)
-    {
-        if (app.Configuration.GetValue<bool>("Firebase:Enabled"))
-            app.Services.GetRequiredService<FirebaseMessaging>();
-        return app;
     }
 }

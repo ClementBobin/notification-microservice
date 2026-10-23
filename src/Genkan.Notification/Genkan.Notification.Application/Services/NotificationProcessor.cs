@@ -1,4 +1,6 @@
 using System.Text.Json;
+using Genkan.Notification.Application.Interfaces;
+using Genkan.Notification.Firebase.Interfaces;
 using Genkan.Notification.Infrastructure.Interfaces;
 using Genkan.Shared.Messaging;
 using Genkan.Shared.Entities;

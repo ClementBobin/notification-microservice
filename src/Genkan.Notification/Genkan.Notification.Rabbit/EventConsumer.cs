@@ -1,5 +1,5 @@
 using System.Text.Json;
-using Genkan.Notification.Infrastructure.Interfaces;
+using Genkan.Notification.Application.Interfaces;
 using Genkan.Shared.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -7,10 +7,10 @@ using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
-namespace Genkan.Notification.Infrastructure.Messaging;
+namespace Genkan.Notification.Rabbit;
 
 /// <summary>Consumes booking.#, access.#, visitor.# (and alert.#) from the durable queue and hands each event to <see cref="IEventHandler"/>.</summary>
-public sealed class EventConsumer(RabbitMqConnection connection, IServiceScopeFactory scopes, IIEventHandler handler, ILogger<EventConsumer> log) : BackgroundService
+public sealed class EventConsumer(RabbitMqConnection connection, IServiceScopeFactory scopes, ILogger<EventConsumer> log) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken ct)
     {

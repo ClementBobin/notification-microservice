@@ -1,8 +1,8 @@
 using Genkan.Notification.Domain.Dto;
-using Genkan.Notification.Infrastructure.Interfaces;
+using Genkan.Notification.Firebase.Interfaces;
 using Microsoft.Extensions.Logging;
 
-namespace Genkan.Notification.Infrastructure.Push;
+namespace Genkan.Notification.Firebase.Push;
 
 /// <summary>Used when Firebase:Enabled is false (local development): logs every push instead of sending it.</summary>
 public sealed class LoggingPushChannel(ILogger<LoggingPushChannel> log) : IMulticastPushSender, ITopicPushSender

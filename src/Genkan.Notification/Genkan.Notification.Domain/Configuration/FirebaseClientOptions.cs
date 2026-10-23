@@ -1,4 +1,4 @@
-namespace Genkan.Notification.Api.Configuration;
+namespace Genkan.Notification.Domain.Configuration;
 
 /// <summary>
 /// Public client-side identifiers of the Firebase project (what google-services.json contains), served to the mobile app

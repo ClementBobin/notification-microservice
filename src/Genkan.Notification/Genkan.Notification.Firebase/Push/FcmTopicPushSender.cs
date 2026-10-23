@@ -1,8 +1,8 @@
 using FirebaseAdmin.Messaging;
 using Genkan.Notification.Domain.Dto;
-using Genkan.Notification.Infrastructure.Interfaces;
+using Genkan.Notification.Firebase.Interfaces;
 
-namespace Genkan.Notification.Infrastructure.Push;
+namespace Genkan.Notification.Firebase.Push;
 
 /// <summary>Topic notification: publish to a topic and manage which tokens are subscribed to it.</summary>
 public sealed class FcmTopicPushSender(FirebaseMessaging fcm) : ITopicPushSender

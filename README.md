@@ -45,13 +45,17 @@ src/
     Genkan.Lab.Domain/                 Dto
     Genkan.Lab.Infrastructure/         Data, Interfaces, Repositories, Messaging (RabbitMQ)
   Genkan.Notification/      Genkan.Notification.slnx
-    Genkan.Notification.Api/           Controllers, Extensions (push wiring), ...
-    Genkan.Notification.Application/   Interfaces, Services (processor, templates)
-    Genkan.Notification.Domain/        Dto, Entities
-    Genkan.Notification.Infrastructure/ Data, Interfaces, Repositories, Messaging (RabbitMQ), Push (FCM)
+    Genkan.Notification.Api/           Controllers, Extensions (health)
+    Genkan.Notification.Rabbit/        RabbitMQ connection, event consumer + publisher, DI extension
+    Genkan.Notification.Application/   Interfaces, Services (processor, templates), DI extension (wires Infrastructure + Firebase)
+    Genkan.Notification.Infrastructure/ Data (PostgreSQL), Interfaces, Repositories
+    Genkan.Notification.Firebase/      Push (FCM senders, logging channel), Interfaces
+    Genkan.Notification.Domain/        Dto, Configuration
 ```
 
-References: `Api -> Application, Domain, Infrastructure`, `Application -> Domain, Infrastructure`, `Infrastructure -> Domain`.
+References: `Auth` and `Lab` use `Api -> Application, Domain, Infrastructure`, `Application -> Domain, Infrastructure`, `Infrastructure -> Domain`.
+`Notification` is `Api -> Application, Rabbit`, `Rabbit -> Application`, `Application -> Infrastructure, Firebase, Domain`:
+both hosts (Api, Rabbit) only call Application, and Application alone decides whether to go through Infrastructure (PostgreSQL) or Firebase (FCM).
 Everything may also use `Genkan.Shared`. Build one service on its own: `dotnet build src/Genkan.Auth/Genkan.Auth.slnx`.
 
 ## Run

@@ -1,7 +1,7 @@
 using FirebaseAdmin.Messaging;
 using Genkan.Notification.Domain.Dto;
 
-namespace Genkan.Notification.Infrastructure.Push;
+namespace Genkan.Notification.Firebase.Push;
 
 /// <summary>Builds the FCM message objects from the common <see cref="PushMessage"/> (notification + data, high priority on Android).</summary>
 internal static class FcmMessageBuilder

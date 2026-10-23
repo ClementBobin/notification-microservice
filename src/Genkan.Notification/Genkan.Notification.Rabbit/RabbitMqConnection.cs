@@ -1,18 +1,8 @@
-using System.Text.Json;
-using Genkan.Notification.Infrastructure.Interfaces;
 using Genkan.Shared.Messaging;
 using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 
-namespace Genkan.Notification.Infrastructure.Messaging;
-
-public sealed class RabbitOptions
-{
-    public string Host { get; set; } = "localhost";
-    public int Port { get; set; } = 5672;
-    public string User { get; set; } = "guest";
-    public string Password { get; set; } = "guest";
-}
+namespace Genkan.Notification.Rabbit;
 
 public sealed class RabbitMqConnection(IOptions<RabbitOptions> options) : IAsyncDisposable
 {
@@ -60,24 +50,5 @@ public sealed class RabbitMqConnection(IOptions<RabbitOptions> options) : IAsync
         await ch.QueueDeclareAsync(Topology.NotificationQueue, durable: true, exclusive: false, autoDelete: false, arguments: args, cancellationToken: ct);
         foreach (var key in Topology.NotificationBindings)
             await ch.QueueBindAsync(Topology.NotificationQueue, Topology.Exchange, key, cancellationToken: ct);
-    }
-}
-
-public sealed class RabbitMqEventPublisher(RabbitMqConnection connection) : IEventPublisher
-{
-    public async Task PublishAsync(EventEnvelope envelope, CancellationToken ct)
-    {
-        var conn = await connection.GetAsync(ct);
-        await using var ch = await conn.CreateChannelAsync(cancellationToken: ct);
-        await RabbitMqConnection.DeclareTopologyAsync(ch, ct); // makes sure the queue exists so nothing is dropped
-
-        var body = JsonSerializer.SerializeToUtf8Bytes(envelope, EventJson.Options);
-        var props = new BasicProperties
-        {
-            Persistent = true,
-            ContentType = "application/json",
-            MessageId = envelope.EventId.ToString(),
-        };
-        await ch.BasicPublishAsync(Topology.Exchange, envelope.Type, mandatory: false, basicProperties: props, body: body, cancellationToken: ct);
     }
 }
