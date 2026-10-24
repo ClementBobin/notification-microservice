@@ -2,6 +2,7 @@ using Genkan.Gateway.Application.Configuration;
 using Genkan.Gateway.Application.Interfaces;
 using Genkan.Gateway.Application.Services;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using StackExchange.Redis;
 
 namespace Genkan.Gateway.Api.Extensions;
 
@@ -26,7 +27,7 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    /// <summary>Binds the "RateLimiting" section (validated at startup) and registers the bucket store.</summary>
+    /// <summary>Binds the "RateLimiting" section (validated at startup) and registers the bucket store chosen by RateLimiting:Store (Memory | Redis).</summary>
     public static IServiceCollection AddGatewayRateLimiting(this IServiceCollection services, IConfiguration config)
     {
         services.AddOptions<RateLimitingOptions>()
@@ -36,8 +37,22 @@ public static class ServiceCollectionExtensions
 
         services.TryAddSingleton(TimeProvider.System);
 
-        services.AddMemoryCache();
-        services.AddSingleton<IRateLimitStore, MemoryRateLimitStore>();
+        if (config.GetValue<RateLimitStoreKind>("RateLimiting:Store") == RateLimitStoreKind.Redis)
+        {
+            var redis = config.GetConnectionString("Redis");
+            if (string.IsNullOrWhiteSpace(redis))
+                throw new InvalidOperationException("RateLimiting:Store is Redis but ConnectionStrings:Redis is not set.");
+
+            // abortConnect=false in the connection string lets the gateway start (and keep serving) while Redis is down.
+            services.AddSingleton<IConnectionMultiplexer>(_ => ConnectionMultiplexer.Connect(redis));
+            services.AddSingleton<IRateLimitStore, RedisRateLimitStore>();
+        }
+        else
+        {
+            services.AddMemoryCache();
+            services.AddSingleton<IRateLimitStore, MemoryRateLimitStore>();
+        }
+
         return services;
     }
 

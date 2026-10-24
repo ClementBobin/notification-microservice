@@ -26,9 +26,18 @@ public sealed class RateLimitPolicyOptions
     public bool IsValid() => Capacity >= 1 && RefillTokens > 0 && RefillPeriodSeconds > 0;
 }
 
+public enum RateLimitStoreKind
+{
+    /// <summary>Buckets live in each gateway process (every replica has its own).</summary>
+    Memory,
+    /// <summary>Buckets live in Redis (ConnectionStrings:Redis) and are shared by every replica.</summary>
+    Redis,
+}
+
 public sealed class RateLimitingOptions
 {
     public bool Enabled { get; set; } = true;
+    public RateLimitStoreKind Store { get; set; } = RateLimitStoreKind.Memory;
     public Dictionary<string, RateLimitPolicyOptions> Policies { get; set; } = new(StringComparer.OrdinalIgnoreCase);
 
     public bool IsValid() => Policies.Values.All(p => p.IsValid());
