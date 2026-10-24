@@ -26,4 +26,13 @@ public sealed class UserRepository(AuthDbContext db) : IUserRepository
         db.Users.Update(user);
         await db.SaveChangesAsync(ct);
     }
+
+    public async Task RegisterFcmTokenAsync(Guid userId, string fcmToken, CancellationToken ct)
+    {
+        var user = await FindByIdAsync(userId, ct);
+        if (user is null) throw new InvalidOperationException("User not found");
+        user.FcmToken = fcmToken;
+        db.Users.Update(user);
+        await db.SaveChangesAsync(ct);
+    }
 }

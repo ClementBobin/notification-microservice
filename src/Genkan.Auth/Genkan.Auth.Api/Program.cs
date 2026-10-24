@@ -1,5 +1,5 @@
 using Genkan.Auth.Api.Extensions;
-using Genkan.Shared;
+using Genkan.Shared.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Logging.AddGenkanLogging();
@@ -11,8 +11,6 @@ builder.Services.AddGenkanApi();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
-
-await app.InitializeDatabaseAsync();
 
 app.UseGenkanApi();
 

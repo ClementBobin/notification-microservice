@@ -1,7 +1,7 @@
 using Genkan.Auth.Application.Interfaces;
 using Genkan.Auth.Domain.Dto;
 using Genkan.Auth.Infrastructure.Interfaces;
-using Genkan.Shared;
+using Genkan.Shared.Auth;
 using Genkan.Shared.Entities;
 using Microsoft.Extensions.Options;
 

@@ -15,16 +15,8 @@ public static class RateLimitingExtensions
 
         services.TryAddSingleton(TimeProvider.System);
 
-        if (string.Equals(config["RateLimiting:Store"], "Redis", StringComparison.OrdinalIgnoreCase))
-        {
-            services.AddSingleton<IConnectionMultiplexer>(_ => ConnectionMultiplexer.Connect(config.GetConnectionString("Redis")!));
-            services.AddSingleton<IRateLimitStore, RedisRateLimitStore>();
-        }
-        else
-        {
-            services.AddMemoryCache();
-            services.AddSingleton<IRateLimitStore, MemoryRateLimitStore>();
-        }
+        services.AddMemoryCache();
+        services.AddSingleton<IRateLimitStore, MemoryRateLimitStore>();
         return services;
     }
 

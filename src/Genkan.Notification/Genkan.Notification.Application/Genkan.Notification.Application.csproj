@@ -3,6 +3,7 @@
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <ProjectReference Include="..\Genkan.Notification.Domain\Genkan.Notification.Domain.csproj" />
     <ProjectReference Include="..\Genkan.Notification.Infrastructure\Genkan.Notification.Infrastructure.csproj" />
+    <ProjectReference Include="..\Genkan.Notification.Firebase\Genkan.Notification.Firebase.csproj" />
     <ProjectReference Include="..\..\Genkan.Shared\Genkan.Shared.csproj" />
   </ItemGroup>
 </Project>

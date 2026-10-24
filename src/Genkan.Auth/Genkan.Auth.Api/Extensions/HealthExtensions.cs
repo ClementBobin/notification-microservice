@@ -1,5 +1,5 @@
 using Genkan.Auth.Infrastructure.Data;
-using Genkan.Shared;
+using Genkan.Shared.Health;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
 

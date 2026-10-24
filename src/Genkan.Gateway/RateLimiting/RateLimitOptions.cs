@@ -29,8 +29,6 @@ public sealed class RateLimitPolicyOptions
 public sealed class RateLimitingOptions
 {
     public bool Enabled { get; set; } = true;
-    /// <summary>"Memory" (one counter set per gateway instance) or "Redis" (shared by every gateway instance).</summary>
-    public string Store { get; set; } = "Memory";
     public Dictionary<string, RateLimitPolicyOptions> Policies { get; set; } = new(StringComparer.OrdinalIgnoreCase);
 
     public bool IsValid() => Policies.Values.All(p => p.IsValid());

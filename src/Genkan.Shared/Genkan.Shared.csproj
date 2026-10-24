@@ -1,8 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <PackageId>Genkan.Shared</PackageId>
+    <Authors>ClementBobin</Authors>
+    <Description>Shared contracts, auth and messaging for the Genkan services</Description>
+  </PropertyGroup>
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.*" />
-    <!-- LabMessaging.cs: the RabbitMQ topology shared by the lab and notification services -->
+    <!-- Messaging/Lab: the RabbitMQ topology shared by the lab and notification services -->
     <PackageReference Include="RabbitMQ.Client" Version="7.*" />
   </ItemGroup>
 </Project>

@@ -54,7 +54,7 @@ public sealed class RateLimitMiddleware
     private string Partition(HttpContext ctx)
     {
         // X-User-Id is only trustworthy after TokenValidationMiddleware (it strips the client's copy and sets its own).
-        var userId = ctx.Request.Headers[Genkan.Shared.GatewayHeaders.UserId].ToString();
+        var userId = ctx.Request.Headers[Genkan.Shared.Auth.GatewayHeaders.UserId].ToString();
         if (_policy.Key == RateLimitKey.User && userId.Length > 0) return $"user:{userId}";
         return $"ip:{ctx.Connection.RemoteIpAddress}";
     }

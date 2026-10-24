@@ -9,9 +9,8 @@ public static class AppServicesExtensions
     public static IServiceCollection AddAppServices(this IServiceCollection services, IConfiguration config)
     {
         services.Configure<AuthOptions>(config.GetSection("Auth"));
-        services.Configure<SeedOptions>(config.GetSection("Seed"));
         services.AddScoped<IAuthService, AuthService>();
-        services.AddScoped<IAdminSeeder, AdminSeeder>();
+        services.AddScoped<IUserService, UserService>();
         return services;
     }
 }

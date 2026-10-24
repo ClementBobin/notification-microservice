@@ -9,4 +9,5 @@ public interface IUserRepository
     Task<bool> AnyAsync(CancellationToken ct);
     Task AddAsync(User user, CancellationToken ct);
     Task UpdateAsync(User user, CancellationToken ct);
+    Task RegisterFcmTokenAsync(Guid userId, string fcmToken, CancellationToken ct);
 }

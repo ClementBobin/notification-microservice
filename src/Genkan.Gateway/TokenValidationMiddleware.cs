@@ -1,4 +1,4 @@
-using Genkan.Shared;
+using Genkan.Shared.Auth;
 
 namespace Genkan.Gateway;
 
@@ -12,7 +12,7 @@ public sealed class TokenValidationMiddleware(RequestDelegate next, IHttpClientF
 {
     internal static readonly HashSet<string> PublicPaths = new(StringComparer.OrdinalIgnoreCase)
     {
-        "/health", "/auth/login", "/auth/health", "/lab/health", "/notifications/health",
+        "/health", "/auth/login", "/auth/health", "/notifications/health",
     };
 
     public async Task InvokeAsync(HttpContext ctx)

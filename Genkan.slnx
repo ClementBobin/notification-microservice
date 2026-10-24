@@ -10,16 +10,12 @@
     <Project Path="src/Genkan.Auth/Genkan.Auth.Application/Genkan.Auth.Application.csproj" />
     <Project Path="src/Genkan.Auth/Genkan.Auth.Api/Genkan.Auth.Api.csproj" />
   </Folder>
-  <Folder Name="/src/Lab/">
-    <Project Path="src/Genkan.Lab/Genkan.Lab.Domain/Genkan.Lab.Domain.csproj" />
-    <Project Path="src/Genkan.Lab/Genkan.Lab.Infrastructure/Genkan.Lab.Infrastructure.csproj" />
-    <Project Path="src/Genkan.Lab/Genkan.Lab.Application/Genkan.Lab.Application.csproj" />
-    <Project Path="src/Genkan.Lab/Genkan.Lab.Api/Genkan.Lab.Api.csproj" />
-  </Folder>
   <Folder Name="/src/Notification/">
     <Project Path="src/Genkan.Notification/Genkan.Notification.Domain/Genkan.Notification.Domain.csproj" />
     <Project Path="src/Genkan.Notification/Genkan.Notification.Infrastructure/Genkan.Notification.Infrastructure.csproj" />
+    <Project Path="src/Genkan.Notification/Genkan.Notification.Firebase/Genkan.Notification.Firebase.csproj" />
     <Project Path="src/Genkan.Notification/Genkan.Notification.Application/Genkan.Notification.Application.csproj" />
+    <Project Path="src/Genkan.Notification/Genkan.Notification.Rabbit/Genkan.Notification.Rabbit.csproj" />
     <Project Path="src/Genkan.Notification/Genkan.Notification.Api/Genkan.Notification.Api.csproj" />
   </Folder>
 </Solution>

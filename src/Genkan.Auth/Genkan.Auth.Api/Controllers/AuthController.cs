@@ -1,6 +1,6 @@
 using Genkan.Auth.Application.Interfaces;
 using Genkan.Auth.Domain.Dto;
-using Genkan.Shared;
+using Genkan.Shared.Controllers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
@@ -9,7 +9,7 @@ namespace Genkan.Auth.Api.Controllers;
 
 [ApiController]
 [Route("auth")]
-public sealed class AuthController(IAuthService auth) : ControllerBase
+public sealed class AuthController(IAuthService auth) : BaseController
 {
     private string? Bearer()
     {
@@ -44,15 +44,5 @@ public sealed class AuthController(IAuthService auth) : ControllerBase
         var token = Bearer();
         if (token is not null) await auth.LogoutAsync(token);
         return NoContent();
-    }
-
-    // Admin only
-    [HttpPost("users")]
-    [Authorize(Roles = Roles.Admin)]
-    public async Task<IActionResult> CreateUser(CreateUserRequest req, CancellationToken ct)
-    {
-        var (user, error) = await auth.CreateUserAsync(req.Email, req.DisplayName, req.Password, req.Role, ct);
-        if (error is null) return Created($"/auth/users/{user!.Id}", user);
-        return StatusCode(error == "email_taken" ? 409 : 400, new { error });
     }
 }

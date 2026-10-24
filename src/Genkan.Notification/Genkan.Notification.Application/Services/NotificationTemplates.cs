@@ -1,6 +1,6 @@
 using System.Text.Json;
 using Genkan.Notification.Domain.Dto;
-using Genkan.Shared;
+using Genkan.Shared.Messaging;
 
 namespace Genkan.Notification.Application.Services;
 
