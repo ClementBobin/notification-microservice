@@ -33,7 +33,9 @@ src/
     Messaging/                         workplace event envelope + topology
     Messaging/Lab/                     lab <-> notification RabbitMQ topology and messages
     Middleware/                        correlation id
-  Genkan.Gateway/                      YARP reverse proxy (single project)
+  Genkan.Gateway/           Genkan.Gateway.slnx
+    Genkan.Gateway.Api/                entrance: Program, appsettings (YARP routes), Middleware (token check, rate limit), Extensions (proxy, pipeline, /swagger)
+    Genkan.Gateway.Application/        business logic: Configuration (options), Interfaces, Models, Routing (public routes), Services (session validation, token buckets, OpenAPI merge), Extensions (DI)
   Genkan.Auth/              Genkan.Auth.slnx
     Genkan.Auth.Api/                   web api: Controllers, Configuration, Extensions, Interceptors, Middleware
     Genkan.Auth.Application/           Interfaces, Services (login, password hashing)
@@ -228,7 +230,7 @@ different definitions is prefixed with the service name) and caches the result f
 "Try it out" calls the gateway, so the token check and the rate limit apply as usual. If a service is down, the others are still shown and the
 description says which one is unreachable.
 
-Settings (`Swagger` section of `src/Genkan.Gateway/appsettings.json`, override with `Swagger__...` environment variables): `Enabled`, `Title`, `CacheSeconds`
+Settings (`Swagger` section of `src/Genkan.Gateway/Genkan.Gateway.Api/appsettings.json`, override with `Swagger__...` environment variables): `Enabled`, `Title`, `CacheSeconds`
 and `Sources` (`Swagger__Sources__0__Url=http://auth:8080/openapi/v1.json`; add an entry for every new service). The two URLs are public when enabled
 (like `/health`), so leave it `false` on anything exposed to the internet. When disabled, `/swagger` is not registered at all.
 

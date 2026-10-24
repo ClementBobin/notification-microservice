@@ -26,7 +26,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - project: Genkan.Gateway/Genkan.Gateway.csproj
+          - project: Genkan.Gateway/Genkan.Gateway.Api/Genkan.Gateway.Api.csproj
             image: gateway
           - project: Genkan.Auth/Genkan.Auth.Api/Genkan.Auth.Api.csproj
             image: auth

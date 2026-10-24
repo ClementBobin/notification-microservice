@@ -112,7 +112,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        SERVICE_PROJECT: Genkan.Gateway/Genkan.Gateway.csproj
+        SERVICE_PROJECT: Genkan.Gateway/Genkan.Gateway.Api/Genkan.Gateway.Api.csproj
     environment:
       <<: *service-env
       Services__AuthUrl: http://auth:8080

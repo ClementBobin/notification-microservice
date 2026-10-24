@@ -1,21 +1,13 @@
 using System.Net;
 using System.Text.Json;
-using Genkan.Gateway.Configuration;
+using Genkan.Gateway.Application.Configuration;
+using Genkan.Gateway.Application.Services;
 using Microsoft.Extensions.Options;
 
-namespace Genkan.Gateway.Swagger;
+namespace Genkan.Gateway.Api.Extensions;
 
-public static class GatewaySwaggerExtensions
+public static class SwaggerEndpointExtensions
 {
-    /// <summary>Binds the "Swagger" section and registers the aggregator. Nothing is exposed until <see cref="UseGatewaySwagger"/> runs with Enabled=true.</summary>
-    public static IServiceCollection AddGatewaySwagger(this IServiceCollection services, IConfiguration config)
-    {
-        services.Configure<SwaggerOptions>(config.GetSection(SwaggerOptions.Section));
-        services.AddHttpClient(OpenApiAggregator.HttpClientName, c => c.Timeout = TimeSpan.FromSeconds(5));
-        services.AddSingleton<OpenApiAggregator>();
-        return services;
-    }
-
     /// <summary>
     /// When Swagger:Enabled is true, serves the combined Swagger UI on GET /swagger and the merged document on GET /swagger/openapi.json.
     /// Call it before the token check: both URLs are public (the UI itself sends the bearer token on "Try it out").

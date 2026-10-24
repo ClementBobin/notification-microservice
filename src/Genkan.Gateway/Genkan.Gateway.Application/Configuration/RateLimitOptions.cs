@@ -1,4 +1,4 @@
-namespace Genkan.Gateway.Configuration;
+namespace Genkan.Gateway.Application.Configuration;
 
 public enum RateLimitKey
 {

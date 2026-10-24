@@ -1,7 +1,8 @@
-using Genkan.Gateway.Configuration;
+using Genkan.Gateway.Application.Configuration;
+using Genkan.Gateway.Application.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace Genkan.Gateway.RateLimiting;
+namespace Genkan.Gateway.Application.Services;
 
 /// <summary>
 /// Buckets kept in this process. No timer is needed: the refill is computed from the time elapsed since the last request.

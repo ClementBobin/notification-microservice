@@ -7,18 +7,15 @@ COPY Genkan.slnx Directory.Build.props ./
 
 # 2. Copy all project files maintaining their directory structure (restore layer cache)
 COPY src/Genkan.Shared/Genkan.Shared.csproj src/Genkan.Shared/
-COPY src/Genkan.Gateway/Genkan.Gateway.csproj src/Genkan.Gateway/
 COPY src/Genkan.Migrator/Genkan.Migrator.csproj src/Genkan.Migrator/
+
+COPY src/Genkan.Gateway/Genkan.Gateway.Application/Genkan.Gateway.Application.csproj src/Genkan.Gateway/Genkan.Gateway.Application/
+COPY src/Genkan.Gateway/Genkan.Gateway.Api/Genkan.Gateway.Api.csproj src/Genkan.Gateway/Genkan.Gateway.Api/
 
 COPY src/Genkan.Auth/Genkan.Auth.Domain/Genkan.Auth.Domain.csproj src/Genkan.Auth/Genkan.Auth.Domain/
 COPY src/Genkan.Auth/Genkan.Auth.Infrastructure/Genkan.Auth.Infrastructure.csproj src/Genkan.Auth/Genkan.Auth.Infrastructure/
 COPY src/Genkan.Auth/Genkan.Auth.Application/Genkan.Auth.Application.csproj src/Genkan.Auth/Genkan.Auth.Application/
 COPY src/Genkan.Auth/Genkan.Auth.Api/Genkan.Auth.Api.csproj src/Genkan.Auth/Genkan.Auth.Api/
-
-COPY src/Genkan.Lab/Genkan.Lab.Domain/Genkan.Lab.Domain.csproj src/Genkan.Lab/Genkan.Lab.Domain/
-COPY src/Genkan.Lab/Genkan.Lab.Infrastructure/Genkan.Lab.Infrastructure.csproj src/Genkan.Lab/Genkan.Lab.Infrastructure/
-COPY src/Genkan.Lab/Genkan.Lab.Application/Genkan.Lab.Application.csproj src/Genkan.Lab/Genkan.Lab.Application/
-COPY src/Genkan.Lab/Genkan.Lab.Api/Genkan.Lab.Api.csproj src/Genkan.Lab/Genkan.Lab.Api/
 
 COPY src/Genkan.Notification/Genkan.Notification.Domain/Genkan.Notification.Domain.csproj src/Genkan.Notification/Genkan.Notification.Domain/
 COPY src/Genkan.Notification/Genkan.Notification.Infrastructure/Genkan.Notification.Infrastructure.csproj src/Genkan.Notification/Genkan.Notification.Infrastructure/

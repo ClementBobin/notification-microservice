@@ -1,8 +1,9 @@
-using Genkan.Gateway.Configuration;
-using Genkan.Gateway.RateLimiting;
+using Genkan.Gateway.Application.Configuration;
+using Genkan.Gateway.Application.Interfaces;
+using Genkan.Shared.Auth;
 using Microsoft.Extensions.Options;
 
-namespace Genkan.Gateway.Middleware;
+namespace Genkan.Gateway.Api.Middleware;
 
 /// <summary>
 /// Takes one token from the caller's bucket before the request goes on to the proxy. When the bucket is empty it answers
@@ -56,7 +57,7 @@ public sealed class RateLimitMiddleware
     private string Partition(HttpContext ctx)
     {
         // X-User-Id is only trustworthy after TokenValidationMiddleware (it strips the client's copy and sets its own).
-        var userId = ctx.Request.Headers[Genkan.Shared.Auth.GatewayHeaders.UserId].ToString();
+        var userId = ctx.Request.Headers[GatewayHeaders.UserId].ToString();
         if (_policy.Key == RateLimitKey.User && userId.Length > 0) return $"user:{userId}";
         return $"ip:{ctx.Connection.RemoteIpAddress}";
     }

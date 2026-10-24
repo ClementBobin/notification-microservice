@@ -1,10 +1,11 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using Genkan.Gateway.Configuration;
-using Genkan.Gateway.Middleware;
+using Genkan.Gateway.Application.Configuration;
+using Genkan.Gateway.Application.Routing;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace Genkan.Gateway.Swagger;
+namespace Genkan.Gateway.Application.Services;
 
 /// <summary>
 /// Downloads the OpenAPI document of every configured service and merges them into one document served by the gateway.
@@ -146,7 +147,7 @@ public sealed class OpenApiAggregator(IHttpClientFactory httpFactory, IOptions<S
 
                 var clone = value.DeepClone();
                 // Routes that the gateway lets through without a token must not ask for one in the UI.
-                if (HttpMethodKeys.Contains(key) && clone is JsonObject operation && TokenValidationMiddleware.PublicPaths.Contains(path.TrimEnd('/')))
+                if (HttpMethodKeys.Contains(key) && clone is JsonObject operation && PublicRoutes.IsPublic(path))
                     operation["security"] = new JsonArray();
 
                 target[key] = clone;

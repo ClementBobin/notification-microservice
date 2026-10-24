@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="Genkan.Gateway.Application/Genkan.Gateway.Application.csproj" />
+  <Project Path="Genkan.Gateway.Api/Genkan.Gateway.Api.csproj" />
+  <Project Path="../Genkan.Shared/Genkan.Shared.csproj" />
+</Solution>
