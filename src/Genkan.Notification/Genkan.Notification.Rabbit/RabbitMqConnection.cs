@@ -1,4 +1,4 @@
-using Genkan.Notification.Rabbit.Configuration;
+using Genkan.Notification.Domain.Configuration;
 using Genkan.Shared.Messaging;
 using Microsoft.Extensions.Options;
 using RabbitMQ.Client;

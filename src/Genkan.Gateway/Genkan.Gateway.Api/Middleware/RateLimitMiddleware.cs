@@ -1,6 +1,7 @@
-using Genkan.Gateway.Application.Configuration;
+using Genkan.Gateway.Api.Configuration;
 using Genkan.Gateway.Application.Interfaces;
 using Genkan.Shared.Auth;
+using Genkan.Shared.Configuration;
 using Microsoft.Extensions.Options;
 
 namespace Genkan.Gateway.Api.Middleware;

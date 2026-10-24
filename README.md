@@ -25,6 +25,7 @@ Each service is its own solution made of four layered projects; the root `Genkan
 src/
   Genkan.Shared/                       one class per file, one folder per concern (namespace = folder):
     Auth/                              Roles, GatewayHeaders, gateway header authentication, PasswordHasher, ClaimsPrincipal.GetUserId()
+    Configuration/                     options used by more than one project: FirebaseClientOptions, RateLimitPolicyOptions, SwaggerOptions
     Configurations/                    EF Core mappings (IEntityTypeConfiguration<T>)
     Controllers/                       BaseController
     Entities/                          tables (User, DeviceToken, NotificationLog, ...)
@@ -34,12 +35,12 @@ src/
     Messaging/Lab/                     lab <-> notification RabbitMQ topology and messages
     Middleware/                        correlation id
   Genkan.Gateway/           Genkan.Gateway.slnx
-    Genkan.Gateway.Api/                entrance: Program, appsettings (YARP routes), Middleware (token check, rate limit), Extensions (proxy, pipeline, /swagger)
-    Genkan.Gateway.Application/        business logic: Configuration (options), Interfaces, Models, Routing (public routes), Services (session validation, token buckets, OpenAPI merge), Extensions (DI)
+    Genkan.Gateway.Api/                entrance: Program, appsettings (YARP routes), Configuration (RateLimitingOptions), Middleware (token check, rate limit), Extensions (proxy, pipeline, /swagger)
+    Genkan.Gateway.Application/        business logic: Interfaces, Models, Routing (public routes), Services (session validation, token buckets, OpenAPI merge), Extensions (DI)
   Genkan.Auth/              Genkan.Auth.slnx
     Genkan.Auth.Api/                   web api: Controllers, Configuration, Extensions, Interceptors, Middleware
     Genkan.Auth.Application/           Interfaces, Services (login, password hashing)
-    Genkan.Auth.Domain/                Dto, Entities
+    Genkan.Auth.Domain/                Dto, Entities, Configuration (AuthOptions)
     Genkan.Auth.Infrastructure/        Data (DbContext, Redis sessions), Interfaces, Repositories
   Genkan.Lab/               Genkan.Lab.slnx
     Genkan.Lab.Api/                    Controllers (devices, push), Extensions
@@ -52,7 +53,7 @@ src/
     Genkan.Notification.Application/   Interfaces, Services (processor, templates), DI extension (wires Infrastructure + Firebase)
     Genkan.Notification.Infrastructure/ Data (PostgreSQL), Interfaces, Repositories
     Genkan.Notification.Firebase/      Push (FCM senders, logging channel), Interfaces
-    Genkan.Notification.Domain/        Dto, Configuration
+    Genkan.Notification.Domain/        Dto, Configuration (RabbitOptions)
 ```
 
 References: `Auth` and `Lab` use `Api -> Application, Domain, Infrastructure`, `Application -> Domain, Infrastructure`, `Infrastructure -> Domain`.

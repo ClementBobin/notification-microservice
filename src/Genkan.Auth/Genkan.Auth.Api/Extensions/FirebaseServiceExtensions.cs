@@ -1,6 +1,6 @@
 using FirebaseAdmin;
 using FirebaseAdmin.Messaging;
-using Genkan.Notification.Domain.Configuration;
+using Genkan.Shared.Configuration;
 using Genkan.Notification.Firebase.Interfaces;
 using Genkan.Notification.Firebase.Push;
 using Genkan.Notification.Firebase;

@@ -1,6 +1,6 @@
 using System.Net;
 using System.Text.Json;
-using Genkan.Gateway.Application.Configuration;
+using Genkan.Shared.Configuration;
 using Genkan.Gateway.Application.Services;
 using Microsoft.Extensions.Options;
 

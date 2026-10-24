@@ -1,4 +1,4 @@
-using Genkan.Gateway.Application.Configuration;
+using Genkan.Shared.Configuration;
 
 namespace Genkan.Gateway.Application.Interfaces;
 

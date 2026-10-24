@@ -1,4 +1,4 @@
-using Genkan.Auth.Application.Configuration;
+using Genkan.Auth.Domain.Configuration;
 using Genkan.Auth.Application.Interfaces;
 using Genkan.Auth.Domain.Dto;
 using Genkan.Auth.Infrastructure.Interfaces;

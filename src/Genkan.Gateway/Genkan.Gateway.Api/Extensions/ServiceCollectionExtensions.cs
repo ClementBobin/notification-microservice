@@ -1,6 +1,7 @@
-using Genkan.Gateway.Application.Configuration;
+using Genkan.Gateway.Api.Configuration;
 using Genkan.Gateway.Application.Interfaces;
 using Genkan.Gateway.Application.Services;
+using Genkan.Shared.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using StackExchange.Redis;
 

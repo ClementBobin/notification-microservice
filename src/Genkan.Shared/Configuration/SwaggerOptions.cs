@@ -1,4 +1,4 @@
-namespace Genkan.Gateway.Application.Configuration;
+namespace Genkan.Shared.Configuration;
 
 /// <summary>One service whose OpenAPI document is merged into the gateway's combined document.</summary>
 public sealed class SwaggerSource

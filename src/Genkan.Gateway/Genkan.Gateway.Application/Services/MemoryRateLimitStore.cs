@@ -1,4 +1,4 @@
-using Genkan.Gateway.Application.Configuration;
+using Genkan.Shared.Configuration;
 using Genkan.Gateway.Application.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
 

@@ -1,6 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using Genkan.Gateway.Application.Configuration;
+using Genkan.Shared.Configuration;
 using Genkan.Gateway.Application.Routing;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;

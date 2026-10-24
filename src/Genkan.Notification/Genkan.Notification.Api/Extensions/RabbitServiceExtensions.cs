@@ -1,6 +1,6 @@
 using Genkan.Notification.Application.Interfaces;
 using Genkan.Notification.Rabbit;
-using Genkan.Notification.Rabbit.Configuration;
+using Genkan.Notification.Domain.Configuration;
 
 namespace Genkan.Notification.Api.Extensions;
 
