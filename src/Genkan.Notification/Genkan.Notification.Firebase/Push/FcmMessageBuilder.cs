@@ -11,11 +11,10 @@ internal static class FcmMessageBuilder
 
     private static Dictionary<string, string>? ToData(PushMessage m) => m.Data is null ? null : new Dictionary<string, string>(m.Data);
 
-    private static AndroidConfig HighPriority() => new() { Priority = Priority.High };
-
     public static Message ForTopic(string topic, PushMessage m) =>
-        new() { Topic = topic, Notification = ToNotification(m), Data = ToData(m), Android = HighPriority() };
+        new() { Topic = topic, Notification = ToNotification(m), Data = ToData(m) };
 
+    [Obsolete("Fid token in the future")]
     public static MulticastMessage ForTokens(IReadOnlyList<string> tokens, PushMessage m) =>
-        new() { Tokens = tokens, Notification = ToNotification(m), Data = ToData(m), Android = HighPriority() };
+        new() { Tokens = tokens, Notification = ToNotification(m), Data = ToData(m) };
 }

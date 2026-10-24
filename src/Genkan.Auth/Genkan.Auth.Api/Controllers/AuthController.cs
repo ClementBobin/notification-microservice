@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.RateLimiting;
 namespace Genkan.Auth.Api.Controllers;
 
 [ApiController]
-[Route("auth")]
+[Route("[controller]")]
 public sealed class AuthController(IAuthService auth) : BaseController
 {
     private string? Bearer()
@@ -18,7 +18,7 @@ public sealed class AuthController(IAuthService auth) : BaseController
     }
 
     // 10 requests / minute / client IP (policy "login" is configured in Program.cs)
-    [HttpPost("login")]
+    [HttpPost("[action]")]
     [EnableRateLimiting("login")]
     public async Task<IActionResult> Login(LoginRequest req, CancellationToken ct)
     {
@@ -29,7 +29,7 @@ public sealed class AuthController(IAuthService auth) : BaseController
     }
 
     // Called by the gateway on every protected request
-    [HttpGet("session")]
+    [HttpGet("[action]")]
     public async Task<IActionResult> Session()
     {
         var token = Bearer();
@@ -38,7 +38,7 @@ public sealed class AuthController(IAuthService auth) : BaseController
         return s is null ? Unauthorized() : Ok(s);
     }
 
-    [HttpPost("logout")]
+    [HttpPost("[action]")]
     public async Task<IActionResult> Logout()
     {
         var token = Bearer();

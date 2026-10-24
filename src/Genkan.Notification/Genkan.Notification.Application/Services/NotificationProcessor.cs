@@ -1,5 +1,8 @@
 using System.Text.Json;
 using Genkan.Notification.Application.Interfaces;
+using Genkan.Notification.Domain;
+using Genkan.Notification.Domain.Dto;
+using Genkan.Notification.Domain.Mapping;
 using Genkan.Notification.Firebase.Interfaces;
 using Genkan.Notification.Infrastructure.Interfaces;
 using Genkan.Shared.Messaging;
@@ -60,9 +63,11 @@ public sealed class NotificationProcessor(INotificationRepository repo, IMultica
 
             try
             {
-                var reached = await push.SendAsync(n, ct);
-                if (reached > 0) await repo.UpdateStatusAsync(n.Id, NotificationStatus.Sent, null, ct);
-                else await repo.UpdateStatusAsync(n.Id, NotificationStatus.Skipped, "no_registered_device", ct);
+                var message = n.ToPushMessage();
+                if (!message.IsValid()) return 0;
+                PushResult reached = await push.SendAsync(["0"], n.ToPushMessage(), ct);
+                if (!reached.IsEmpty()) await repo.UpdateStatusAsync(n.Id, NotificationStatus.Sent, null, ct);
+                else await repo.UpdateStatusAsync(n.Id, NotificationStatus.Skipped, reached.Error, ct);
             }
             catch (Exception ex) when (ex is not OperationCanceledException)
             {

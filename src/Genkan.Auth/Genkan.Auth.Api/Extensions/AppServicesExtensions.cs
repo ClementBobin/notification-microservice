@@ -1,3 +1,4 @@
+using Genkan.Auth.Application.Configuration;
 using Genkan.Auth.Application.Interfaces;
 using Genkan.Auth.Application.Services;
 

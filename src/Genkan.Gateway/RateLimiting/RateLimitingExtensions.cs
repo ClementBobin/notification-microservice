@@ -1,3 +1,5 @@
+using Genkan.Gateway.Configuration;
+using Genkan.Gateway.Middleware;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using StackExchange.Redis;
 

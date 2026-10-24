@@ -3,10 +3,9 @@ using FirebaseAdmin.Messaging;
 using Genkan.Notification.Domain.Configuration;
 using Genkan.Notification.Firebase.Interfaces;
 using Genkan.Notification.Firebase.Push;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+using Genkan.Notification.Firebase;
 
-namespace Genkan.Notification.Firebase.Extensions;
+namespace Genkan.Auth.Api.Extensions;
 
 public static class FirebaseServiceExtensions
 {

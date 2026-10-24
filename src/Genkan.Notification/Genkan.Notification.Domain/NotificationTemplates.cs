@@ -2,7 +2,7 @@ using System.Text.Json;
 using Genkan.Notification.Domain.Dto;
 using Genkan.Shared.Messaging;
 
-namespace Genkan.Notification.Application.Services;
+namespace Genkan.Notification.Domain;
 
 /// <summary>Event type -> title/body. Unknown types return null and are ignored.</summary>
 public static class NotificationTemplates

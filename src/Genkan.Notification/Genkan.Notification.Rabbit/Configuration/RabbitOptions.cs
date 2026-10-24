@@ -1,4 +1,4 @@
-namespace Genkan.Notification.Rabbit;
+namespace Genkan.Notification.Rabbit.Configuration;
 
 public sealed class RabbitOptions
 {

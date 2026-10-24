@@ -14,7 +14,7 @@ public sealed class GatewayHeaderAuthHandler(
     IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder)
     : AuthenticationHandler<AuthenticationSchemeOptions>(options, logger, encoder)
 {
-    public const string Scheme = "GatewayHeaders";
+    public new const string Scheme = "GatewayHeaders";
 
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {

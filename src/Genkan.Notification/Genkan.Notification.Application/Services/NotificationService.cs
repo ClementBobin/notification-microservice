@@ -8,7 +8,7 @@ using Genkan.Shared.Entities;
 namespace Genkan.Notification.Application.Services;
 
 public sealed class NotificationService(
-    INotificationRepository repo, IEventPublisher publisher) : INotificationService
+    INotificationRepository repo) : INotificationService
 {
     private static NotificationDto ToDto(NotificationLog n) => new(
         n.Id, n.EventId, n.EventType, n.IsBroadcast ? null : n.RecipientUserId, n.IsBroadcast,
@@ -20,15 +20,5 @@ public sealed class NotificationService(
         var size = Math.Clamp(pageSize ?? 25, 1, 100);
         var (items, total) = await repo.QueryAsync(new NotificationFilter(userId, includeBroadcast, type, status, p, size), ct);
         return new PagedResult<NotificationDto>(items.Select(ToDto).ToList(), total, p, size);
-    }
-
-    /// <summary>Publishes an alert.broadcast event; the consumer turns it into a notification for everyone.</summary>
-    public async Task<Guid> CreateAlertAsync(string title, string message, Guid createdBy, CancellationToken ct)
-    {
-        var envelope = new EventEnvelope(
-            Guid.NewGuid(), "alert.broadcast", DateTimeOffset.UtcNow, [],
-            JsonSerializer.SerializeToElement(new { title, message, createdBy }, EventJson.Options));
-        await publisher.PublishAsync(envelope, ct);
-        return envelope.EventId;
     }
 }

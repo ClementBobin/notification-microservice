@@ -1,4 +1,4 @@
-namespace Genkan.Auth.Application.Services;
+namespace Genkan.Auth.Application.Configuration;
 
 public sealed class AuthOptions
 {

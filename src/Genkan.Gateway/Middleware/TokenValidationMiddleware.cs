@@ -1,6 +1,6 @@
 using Genkan.Shared.Auth;
 
-namespace Genkan.Gateway;
+namespace Genkan.Gateway.Middleware;
 
 public sealed record SessionDto(Guid UserId, string Email, string Role, string? DisplayName);
 

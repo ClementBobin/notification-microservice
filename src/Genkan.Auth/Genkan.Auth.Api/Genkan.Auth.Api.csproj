@@ -1,9 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.*" />
+    <ProjectReference Include="..\..\Genkan.Notification\Genkan.Notification.Domain\Genkan.Notification.Domain.csproj" />
+    <ProjectReference Include="..\..\Genkan.Notification\Genkan.Notification.Firebase\Genkan.Notification.Firebase.csproj" />
     <ProjectReference Include="..\Genkan.Auth.Application\Genkan.Auth.Application.csproj" />
     <ProjectReference Include="..\Genkan.Auth.Domain\Genkan.Auth.Domain.csproj" />
     <ProjectReference Include="..\Genkan.Auth.Infrastructure\Genkan.Auth.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Genkan.Shared\Genkan.Shared.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="FirebaseAdmin">
+      <HintPath>..\..\..\..\..\.nuget\packages\firebaseadmin\3.7.0\lib\net6.0\FirebaseAdmin.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

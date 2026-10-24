@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text.Json;
+using Genkan.Gateway.Configuration;
 using Microsoft.Extensions.Options;
 
 namespace Genkan.Gateway.Swagger;

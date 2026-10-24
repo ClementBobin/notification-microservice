@@ -8,7 +8,7 @@ namespace Genkan.Notification.Firebase;
 /// Fails at startup when Firebase is enabled but the credentials are missing or invalid,
 /// instead of dead-lettering every RabbitMQ event later. Registered only when Firebase:Enabled=true.
 /// </summary>
-internal sealed class FirebaseStartupValidator(IServiceProvider services) : IHostedService
+public sealed class FirebaseStartupValidator(IServiceProvider services) : IHostedService
 {
     public Task StartAsync(CancellationToken ct)
     {

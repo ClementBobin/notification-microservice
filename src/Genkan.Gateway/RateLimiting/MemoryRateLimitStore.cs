@@ -1,3 +1,4 @@
+using Genkan.Gateway.Configuration;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Genkan.Gateway.RateLimiting;

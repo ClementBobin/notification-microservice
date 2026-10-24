@@ -1,6 +1,8 @@
+using Genkan.Gateway.Configuration;
+using Genkan.Gateway.RateLimiting;
 using Microsoft.Extensions.Options;
 
-namespace Genkan.Gateway.RateLimiting;
+namespace Genkan.Gateway.Middleware;
 
 /// <summary>
 /// Takes one token from the caller's bucket before the request goes on to the proxy. When the bucket is empty it answers

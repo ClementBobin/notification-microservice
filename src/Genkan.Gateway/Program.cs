@@ -1,4 +1,5 @@
 using Genkan.Gateway;
+using Genkan.Gateway.Middleware;
 using Genkan.Gateway.RateLimiting;
 using Genkan.Gateway.Swagger;
 using Genkan.Shared.Hosting;

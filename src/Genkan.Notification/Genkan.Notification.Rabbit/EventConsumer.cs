@@ -30,7 +30,7 @@ public sealed class EventConsumer(RabbitMqConnection connection, IServiceScopeFa
         finally { if (channel is not null) await channel.DisposeAsync(); }
     }
 
-    private async Task<IChannel> StartAsync(CancellationToken ct)
+    public override async Task<IChannel> StartAsync(CancellationToken ct)
     {
         var conn = await connection.GetAsync(ct);
         var channel = await conn.CreateChannelAsync(cancellationToken: ct);

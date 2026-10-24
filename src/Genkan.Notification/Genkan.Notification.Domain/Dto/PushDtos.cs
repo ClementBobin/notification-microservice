@@ -12,9 +12,7 @@ public sealed record PushMessage(string Title, string Body, IReadOnlyDictionary<
 /// </summary>
 public sealed record PushResult(int Accepted, int Failed, IReadOnlyList<string> InvalidTokens, string? Error = null, string? MessageId = null)
 {
-    public const string NoDevice = "no_registered_device";
-
-    public static PushResult Empty(string reason) => new(0, 0, [], reason);
+    public bool IsEmpty() => Accepted == 0 && Failed == 0 && InvalidTokens.Count == 0;
 }
 
 /// <summary>Public client-side identifiers (the content of google-services.json), never the service-account key.</summary>

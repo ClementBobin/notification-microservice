@@ -1,2 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\..\Genkan.Shared\Genkan.Shared.csproj" />
+  </ItemGroup>
 </Project>

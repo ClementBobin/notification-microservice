@@ -1,3 +1,5 @@
+using Genkan.Gateway.Configuration;
+
 namespace Genkan.Gateway.RateLimiting;
 
 public readonly record struct RateLimitDecision(bool Allowed, int Remaining, TimeSpan RetryAfter);
